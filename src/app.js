@@ -28,12 +28,6 @@ app.get('/products/:pid', async (req, res) => {
   }
 });
 
-/* app.get('/products', async (req, res) => {
-  const limit = req.query.limit;
-  const limitedProducts = await productManager.getLimitedProducts(limit);
-  res.json(limitedProducts);
-}); */
-
 
 app.listen(8080, () => {
   console.log(`Example app listening on port 8080`);
