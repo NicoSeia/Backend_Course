@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Product test",
+    "description": "This a test product",
+    "price": 200,
+    "thumbnail": "Without image",
+    "code": "abc123",
+    "stock": 25
+  },
+  {
+    "id": 2,
+    "title": "Product update test",
+    "description": "This a test product update",
+    "price": 1000,
+    "thumbnail": "Without image",
+    "code": "abc789",
+    "stock": 100
+  },
+  {
+    "id": 3,
+    "title": "Product 3 test",
+    "description": "This a test product 3",
+    "price": 145,
+    "thumbnail": "Without image",
+    "code": "def123",
+    "stock": 100
+  },
+  {
+    "id": 4,
+    "title": "Product 4 test",
+    "description": "This a test product 4",
+    "price": 170,
+    "thumbnail": "Without image",
+    "code": "def456",
+    "stock": 110
+  }
+]
