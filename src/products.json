@@ -10,12 +10,12 @@
   },
   {
     "id": 2,
-    "title": "Product update test",
-    "description": "This a test product update",
-    "price": 1000,
+    "title": "Product 2 test",
+    "description": "This a test product 2",
+    "price": 100,
     "thumbnail": "Without image",
-    "code": "abc789",
-    "stock": 100
+    "code": "abc456",
+    "stock": 20
   },
   {
     "id": 3,
@@ -34,5 +34,59 @@
     "thumbnail": "Without image",
     "code": "def456",
     "stock": 110
+  },
+  {
+    "id": 5,
+    "title": "Product 5 test",
+    "description": "This a test product 5",
+    "price": 220,
+    "thumbnail": "Without image",
+    "code": "def789",
+    "stock": 11
+  },
+  {
+    "id": 6,
+    "title": "Product 6 test",
+    "description": "This a test product 6",
+    "price": 70,
+    "thumbnail": "Without image",
+    "code": "ghi123",
+    "stock": 40
+  },
+  {
+    "id": 7,
+    "title": "Product 7 test",
+    "description": "This a test product 7",
+    "price": 90,
+    "thumbnail": "Without image",
+    "code": "ghi456",
+    "stock": 25
+  },
+  {
+    "id": 8,
+    "title": "Product 8 test",
+    "description": "This a test product 8",
+    "price": 120,
+    "thumbnail": "Without image",
+    "code": "ghi789",
+    "stock": 30
+  },
+  {
+    "id": 9,
+    "title": "Product 9 test",
+    "description": "This a test product 9",
+    "price": 300,
+    "thumbnail": "Without image",
+    "code": "jkl123",
+    "stock": 10
+  },
+  {
+    "id": 10,
+    "title": "Product 10 test",
+    "description": "This a test product 10",
+    "price": 270,
+    "thumbnail": "Without image",
+    "code": "jkl456",
+    "stock": 40
   }
 ]
