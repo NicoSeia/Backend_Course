@@ -41,10 +41,11 @@ class ProductManager {
     async getLimitedProducts(limit) {
         let productsInJson = await fs.promises.readFile("products.json", "utf-8");
         productsInJson = JSON.parse(productsInJson);
-        if (limit <= 0) {
+    
+        if (parseInt(limit) <= 0) {
             console.log("Invalid limit");
         } else {
-            return productsInJson.filter(product => product.id <= parseInt(limit));
+            return productsInJson.slice(0, parseInt(limit));
         }
     }
 
