@@ -4,7 +4,9 @@
     "title": "Product test",
     "description": "This a test product",
     "price": 200,
-    "thumbnail": "Without image",
+    "thumbnail": [
+      "Without image"
+    ],
     "code": "abc123",
     "stock": 25
   },
@@ -13,7 +15,9 @@
     "title": "Product 2 test",
     "description": "This a test product 2",
     "price": 100,
-    "thumbnail": "Without image",
+    "thumbnail": [
+      "Without image"
+    ],
     "code": "abc456",
     "stock": 20
   },
@@ -22,7 +26,9 @@
     "title": "Product 3 test",
     "description": "This a test product 3",
     "price": 145,
-    "thumbnail": "Without image",
+    "thumbnail": [
+      "Without image"
+    ],
     "code": "def123",
     "stock": 100
   },
@@ -31,7 +37,9 @@
     "title": "Product 4 test",
     "description": "This a test product 4",
     "price": 170,
-    "thumbnail": "Without image",
+    "thumbnail": [
+      "Without image"
+    ],
     "code": "def456",
     "stock": 110
   },
@@ -40,7 +48,9 @@
     "title": "Product 5 test",
     "description": "This a test product 5",
     "price": 220,
-    "thumbnail": "Without image",
+    "thumbnail": [
+      "Without image"
+    ],
     "code": "def789",
     "stock": 11
   },
@@ -49,7 +59,9 @@
     "title": "Product 6 test",
     "description": "This a test product 6",
     "price": 70,
-    "thumbnail": "Without image",
+    "thumbnail": [
+      "Without image"
+    ],
     "code": "ghi123",
     "stock": 40
   },
@@ -58,7 +70,9 @@
     "title": "Product 7 test",
     "description": "This a test product 7",
     "price": 90,
-    "thumbnail": "Without image",
+    "thumbnail": [
+      "Without image"
+    ],
     "code": "ghi456",
     "stock": 25
   },
@@ -67,7 +81,9 @@
     "title": "Product 8 test",
     "description": "This a test product 8",
     "price": 120,
-    "thumbnail": "Without image",
+    "thumbnail": [
+      "Without image"
+    ],
     "code": "ghi789",
     "stock": 30
   },
@@ -76,7 +92,9 @@
     "title": "Product 9 test",
     "description": "This a test product 9",
     "price": 300,
-    "thumbnail": "Without image",
+    "thumbnail": [
+      "Without image"
+    ],
     "code": "jkl123",
     "stock": 10
   },
@@ -85,7 +103,9 @@
     "title": "Product 10 test",
     "description": "This a test product 10",
     "price": 270,
-    "thumbnail": "Without image",
+    "thumbnail": [
+      "Without image"
+    ],
     "code": "jkl456",
     "stock": 40
   }
