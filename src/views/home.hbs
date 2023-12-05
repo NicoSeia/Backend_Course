@@ -1,0 +1,16 @@
+<main>
+    <header>
+        <h2>You can find all products</h2>
+    </header>
+    <div>
+        <ul>
+            {{#each products}}
+            <li>Title: {{this.title}}</li>
+            <li>Price: ${{this.price}}</li>
+            <li>Stock: {{this.stock}}</li>
+            <hr>
+            {{/each}}
+        </ul>
+    </div>
+</main>
+

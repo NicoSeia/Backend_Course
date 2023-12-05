@@ -1,0 +1,28 @@
+<div>
+    <h2>Here, you can add or remove products</h2>
+</div>
+<h3>List of Products</h3>
+<div>
+    <form>
+        <input type="text" id="title" placeholder="Product title" />
+        <input type="text" id="description" placeholder="Product description" />
+        <input type="number" id="price" placeholder="Product price" />
+        <input type="text" id="thumbnail" placeholder="Product thumbnail" />
+        <input type="text" id="code" placeholder="Product code" />
+        <input type="number" id="stock" placeholder="Product stock" />
+        <input type="checkbox" id="status" placeholder="Product status" />
+        <input type="text" id="category" placeholder="Product category" />
+        <input type="button" value="Add product" onclick="addProduct()" />
+    </form>
+</div>
+<ul>
+    {{#each products}}
+    <li>Title: {{this.title}}</li>
+    <li>Price: ${{this.price}}</li>
+    <li>Stock: {{this.stock}}</li>
+    <button onclick="removeProduct({{this.id}})">Remove</button>
+    <hr>
+    {{/each}}
+</ul>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>

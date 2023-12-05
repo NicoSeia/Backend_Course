@@ -1,27 +1,5 @@
 [
   {
-    "id": 1,
-    "title": "Product test",
-    "description": "This a test product",
-    "price": 200,
-    "thumbnail": [
-      "Without image"
-    ],
-    "code": "abc123",
-    "stock": 25
-  },
-  {
-    "id": 2,
-    "title": "Product 2 test",
-    "description": "This a test product 2",
-    "price": 100,
-    "thumbnail": [
-      "Without image"
-    ],
-    "code": "abc456",
-    "stock": 20
-  },
-  {
     "id": 3,
     "title": "Product 3 test",
     "description": "This a test product 3",
@@ -108,5 +86,16 @@
     ],
     "code": "jkl456",
     "stock": 40
+  },
+  {
+    "id": 11,
+    "title": "Product 1 test",
+    "description": "This a test product 1",
+    "price": "999",
+    "thumbnail": "Without image",
+    "code": "abc123",
+    "stock": "88",
+    "status": "on",
+    "category": "non-category"
   }
 ]
