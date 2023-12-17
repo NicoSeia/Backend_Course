@@ -1,26 +1,18 @@
 const { Router } = require('express')
-const productManager = require('../managers/productManager')
+const productManager = require('../daos/fileSystem/productManager')
+const productDaoMongo = require('../daos/mongo/productDaoMongo')
 
 const router = Router()
-const productService = new productManager()
+const productService = new productDaoMongo()
 
 router
     .get('/', async (req,res)=>{
         try{
-            const limit = req.query.limit;
-            const products = await productService.getProducts();
-            const limitedProducts = await productService.getLimitedProducts(limit);
-            if (!limit){
-                return res.json({
-                    status: 'succes',
-                    payload: products
-                });
-            }else{
-                return res.json({
-                    status: 'succes',
-                    payload: limitedProducts
-                });
-            }
+            const products = await productService.getProducts()
+            return res.json({
+                status: 'succes',
+                payload: products
+            });
         }catch (error){
             console.error(error);
             res.status(500).send('Server error');

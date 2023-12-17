@@ -62,7 +62,7 @@ class CartManager {
           return { cart }; 
         } else {
           console.log("This cart does not exist");
-          return {  cart: { products: [] } }; 
+          return { cart: { products: [] } }; 
         }
     }
 

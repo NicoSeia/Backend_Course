@@ -2,11 +2,12 @@ const express = require('express')
 const handlebars = require('express-handlebars')
 const app = express()
 const { Server } = require('socket.io')
+const { connectDb } = require('./config/config.js')
 
 const productRouter = require('./routes/products.router.js')
 const cartRouter = require('./routes/carts.router.js')
 const viewsRouter = require('./routes/views.router.js')
-const ProductManager = require('./managers/productManager.js')
+const ProductManager = require('./daos/fileSystem/productManager.js')
 
 
 app.use(express.json());
@@ -29,6 +30,8 @@ const serverHttp = app.listen(8080, () => {
   console.log(`Example app listening on port 8080`);
 });
 
+//connection to data base
+connectDb()
 
 const io = new Server(serverHttp)
 
@@ -50,6 +53,7 @@ io.on('connection', socket => {
     socket.emit('products', productsList)
   })
 })
+
 
 
 module.exports = app;
