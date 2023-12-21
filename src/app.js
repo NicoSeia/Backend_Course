@@ -33,8 +33,11 @@ const serverHttp = app.listen(8080, () => {
 //connection to data base
 connectDb()
 
+
+/* The code block is setting up a WebSocket server using Socket.IO. */
 const io = new Server(serverHttp)
 
+const { messageModel } = require('../src/daos/mongo/models/message.model.js')
 const products = new ProductManager('./src/mockDB/products.json')
 io.on('connection', socket => {
   console.log('New client connection')
@@ -51,6 +54,34 @@ io.on('connection', socket => {
     const productsList = await products.getProducts()
 
     socket.emit('products', productsList)
+  })
+
+  socket.on('message', async (data) => {
+    console.log(`${data.user}: ${data.message}`)
+
+    try {
+      const newMessage = {
+        message: data.message,
+        timestamp: new Date()
+      }
+  
+      let userDocument = await messageModel.findOne({ user: data.user })
+  
+      if (!userDocument) {
+        userDocument = new messageModel({
+          user: data.user,
+          messages: [newMessage]
+        })
+      } else {
+        userDocument.messages.push(newMessage)
+      }
+  
+      await userDocument.save()
+  
+      io.emit('messageLogs', { user: data.user, message: newMessage })
+    } catch (error) {
+      console.error('Error saving message to database:', error)
+    }
   })
 })
 
