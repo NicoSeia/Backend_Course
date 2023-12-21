@@ -33,25 +33,32 @@ const serverHttp = app.listen(8080, () => {
 //connection to data base
 connectDb()
 
-
 /* The code block is setting up a WebSocket server using Socket.IO. */
 const io = new Server(serverHttp)
 
 const { messageModel } = require('../src/daos/mongo/models/message.model.js')
-const products = new ProductManager('./src/mockDB/products.json')
+//const products = new ProductManager('./src/mockDB/products.json')
+const { productModel } = require('../src/daos/mongo/models/product.model.js')
 io.on('connection', socket => {
   console.log('New client connection')
 
   socket.on('newProduct', async addProduct => {
-    await products.addProduct(addProduct)
-    const productsList = await products.getProducts()
+    /* await products.addProduct(addProduct)
+    const productsList = await products.getProducts() */
+    const newProduct = new productModel(addProduct)
+    await newProduct.save()
+
+    const productsList = await productModel.find()
 
     socket.emit('products', productsList)
   })
 
   socket.on('deleteProduct', async deleteProductById => {
-    await products.deleteProduct(deleteProductById)
-    const productsList = await products.getProducts()
+    /* await products.deleteProduct(deleteProductById)
+    const productsList = await products.getProducts() */
+    await productModel.findByIdAndDelete(deleteProductById)
+    
+    const productsList = await productModel.find()
 
     socket.emit('products', productsList)
   })

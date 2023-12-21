@@ -1,26 +1,32 @@
 //console.log("bienvenidos al script")
 const socket = io()
 
-socket.on('update.products', (data) => {
-    const productsList = document.getElementById('products')
-    productsList.innerHTML = ""
-    data.forEach((product) => {
-    productsList.innerHTML += `
-        <li>
-        ${product.title}
-        <button onclick="removeProduct(${product.id})">Remove</button>
-        </li>
-        `
+socket.on('products', (data) => {
+  console.log(data)
+  const productsList = document.getElementById('products')
+  productsList.innerHTML = ""
+
+  data.forEach((product) => {
+    const listItem = document.createElement('li')
+    listItem.innerHTML = `
+      <strong>Title:</strong> ${product.title}<br>
+      <strong>Price:</strong> $${product.price}<br>
+      <strong>Stock:</strong> ${product.stock}<br>
+      <button onclick="removeProduct('${product._id}')">Remove</button>
+      <hr>
+    `
+    productsList.appendChild(listItem)
   })
 })
 
 const removeProduct = (id) => {
-    fetch(`/api/products/${id}`, {
-        method: 'DELETE'
-        })
-        .then((response)=> response.json)
-        .then(data=> console.log(data))
-    }
+  fetch(`/api/products/${id}`, {
+    method: 'DELETE'
+  })
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error("Error:", error))
+}
 
 const addProduct = () => {
     const title = document.getElementById("title").value

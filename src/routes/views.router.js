@@ -4,10 +4,11 @@ const router = Router()
 
 const ProductManager = require("../daos/fileSystem/productManager");
 
-const productManager = new ProductManager("./src/mockDB/products.json")
+const productDaoMongo = require('../daos/mongo/productDaoMongo')
+const productViewService = new productDaoMongo()
 
 router.get('/', async (req, res) => {
-    const products = await productManager.getProducts()
+    const products = await productViewService.getProducts()
     console.log(products)
     res.render('home', {
         title: 'Home',
@@ -16,7 +17,7 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/realTimeProducts', async (req, res) => {
-    const products = await productManager.getProducts()
+    const products = await productViewService.getProducts()
     console.log(products)
     res.render('realTimeProducts', {
         title: 'Real Time',

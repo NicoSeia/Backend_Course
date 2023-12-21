@@ -34,7 +34,7 @@ class productDaoMongo {
     }
 
     async getProducts(){
-        const products = await this.model.find()
+        const products = await this.model.find({ isActive: true }).lean()
         return products
     }
 
