@@ -6,10 +6,7 @@ class cartDaoMongo {
     }
 
     async createCart() {
-        const lastCart = await this.model.findOne({}, {}, { sort: { 'id': -1 } })
-
         const newCart = new this.model({
-            id: lastCart ? lastCart.id + 1 : 1,
             products: [],
         });
 
@@ -24,7 +21,7 @@ class cartDaoMongo {
     }
 
     async getCartById(cid) {
-        const cart = await this.model.findOne({ id: parseInt(cid) })
+        const cart = await this.model.findById(cid)
 
         if (cart) {
             return { cart: cart.toObject() }
@@ -35,14 +32,14 @@ class cartDaoMongo {
     }
 
     async addProductToCart(cartId, productId) {
-        const cart = await this.model.findOne({ id: parseInt(cartId) })
+        const cart = await this.model.findById(cartId)
 
         if (!cart) {
             console.log("Cart not found")
             return
         }
 
-        const existingProductIndex = cart.products.findIndex((item) => item.product === parseInt(productId))
+        const existingProductIndex = cart.products.findIndex((item) => item.product.equals(productId))
 
         if (existingProductIndex !== -1) {
             cart.products[existingProductIndex].quantity += 1;

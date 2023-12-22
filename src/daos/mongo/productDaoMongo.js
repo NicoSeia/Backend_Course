@@ -39,7 +39,7 @@ class productDaoMongo {
     }
 
     async getProductById(pid){
-        const product = await this.model.findById(pid)
+        const product = await this.model.findById(pid).lean()
 
         if (product) {
             return [product]
@@ -74,7 +74,7 @@ class productDaoMongo {
         }
     }
 
-    async deleteProduct(){
+    async deleteProduct(id){
         const product = await this.model.findById(id)
         if (product) {
             product.isActive = false

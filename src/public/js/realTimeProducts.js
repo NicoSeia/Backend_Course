@@ -2,7 +2,7 @@
 const socket = io()
 
 socket.on('products', (data) => {
-  console.log(data)
+  //console.log(data)
   const productsList = document.getElementById('products')
   productsList.innerHTML = ""
 
@@ -35,8 +35,9 @@ const addProduct = () => {
     const thumbnail = document.getElementById("thumbnail").value
     const code = document.getElementById("code").value
     const stock = document.getElementById("stock").value
-    const status = document.getElementById("status").value
+    const status = document.getElementById("status").checked
     const category = document.getElementById("category").value
+
     const product = {
         title,
         description,

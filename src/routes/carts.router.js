@@ -1,4 +1,5 @@
 const { Router } = require('express')
+const mongoose = require('mongoose')
 const cartManager = require('../daos/fileSystem/cartManager')
 const cartDaoMongo = require('../daos/mongo/cartDaoMongo')
 
@@ -51,9 +52,7 @@ router
     .post('/:cid/product/:pid', async (req,res)=>{
         try{
             const { cid, pid} = req.params
-            const cartId = parseInt(cid)
-            const productId = parseInt(pid)
-            const productInCart = await cartService.addProductToCart(cartId, productId)
+            const productInCart = await cartService.addProductToCart(cid, pid)
             res.json({
                 status: 'success',
                 payload: productInCart

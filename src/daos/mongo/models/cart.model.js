@@ -1,10 +1,10 @@
 const { Schema, model } = require('mongoose')
 
 const cartSchema = new Schema({
-    id: {
+    /* id: {
         type: Number,
         required: true
-    },
+    }, */
     products: [
         {
             product: {

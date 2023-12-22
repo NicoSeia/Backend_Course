@@ -1,5 +1,8 @@
 const socket = io()
 
+const chatBox = document.getElementById('chatBox')
+const messageLogs = document.getElementById('messageLogs')
+
 Swal.fire({
     title: 'Your email',
     input: 'text',
@@ -23,5 +26,9 @@ chatBox.addEventListener('keyup', evt => {
 })
 
 socket.on('messageLogs', (data) => {
-  console.log(`${data.user}: ${data.message}`)
+    console.log(`${data.user}: ${data.message}`)
+    if (data && data.message) {
+        const messageLogs = document.getElementById('messageLogs')
+        messageLogs.innerHTML += `<p>${data.user}: ${data.message.message}</p>`
+    }
 })

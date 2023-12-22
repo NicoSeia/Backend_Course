@@ -63,11 +63,9 @@ router
     .put('/:pid', async (req,res)=>{
         try{
             const pid = req.params.pid
-            if(isNaN(pid)){
-                return res.status(400).json('error: Not a valid ID')
-            }
+            
             const {title, description, price, thumbnail, code, stock, status, category} = req.body
-            productService.updateProduct(pid, title, description, price, thumbnail, code, stock, status, category)
+            await productService.updateProduct(pid, title, description, price, thumbnail, code, stock, status, category)
             res.json({
                 status: 'success',
                 message: 'Product updated successfully',
@@ -79,15 +77,19 @@ router
     })
     .delete('/:pid', async (req,res)=>{
         try{
-            const pid = req.params.pid
-            if(isNaN(pid)){
-                return res.status(400).json('Error: not a valid id')
-            }
-            productService.deleteProduct(pid)
-            res.json({
-                status: 'success',
-                message: 'product deleted'
-            })
+            const pid = req.params.pid;
+            const deletedProduct = await productService.deleteProduct(pid);
+
+            if (deletedProduct) {
+                return res.json({
+                    status: 'success',
+                    message: 'Product deleted successfully'
+                });
+            } else {
+                return res.status(404).json({
+                    status: 'error',
+                    message: 'Product not found'
+            })}
         }catch(error){
             console.log(error);
             res.status(500).send('server error')
