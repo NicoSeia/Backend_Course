@@ -52,7 +52,9 @@ router
     .post('/:cid/product/:pid', async (req,res)=>{
         try{
             const { cid, pid} = req.params
-            const productInCart = await cartService.addProductToCart(cid, pid)
+            const cartId = mongoose.Types.ObjectId(cid)
+            const productId = mongoose.Types.ObjectId(pid)
+            const productInCart = await cartService.addProductToCart(cartId, productId)
             res.json({
                 status: 'success',
                 payload: productInCart
@@ -60,6 +62,93 @@ router
             
         }catch(error){
             console.log(error)
+            res.status(500).send('Server error')
+        }
+    })
+    .delete('/:cid/product/:pid', async (req,res) =>{
+        try {
+            const { cid, pid } = req.params
+            const result = await cartService.removeProductFromCart(cid, pid)
+      
+            if (result.success) {
+              res.json({
+                status: 'success',
+                message: 'Product removed from cart successfully',
+              })
+            } else {
+              res.status(404).json({
+                status: 'error',
+                message: 'Product or cart not found',
+              })
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(500).send('Server error')
+        }
+    })
+    .put('/:cid', async (req, res) => {
+        try {
+            const { cid } = req.params
+            const { products } = req.body
+            const result = await cartService.updateCart(cid, products)
+        
+            if (result.success) {
+                res.json({
+                    status: 'success',
+                    message: 'Cart updated successfully',
+                })
+            } else {
+                res.status(404).json({
+                    status: 'error',
+                    message: 'Cart not found',
+                })
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(500).send('Server error')
+        }
+    })
+    .put('/:cid/products/:pid', async (req, res) => {
+        try {
+            const { cid, pid } = req.params
+            const { quantity } = req.body
+        
+            const result = await cartService.updateProductQuantity(cid, pid, quantity)
+        
+            if (result.success) {
+                res.json({
+                    status: 'success',
+                    message: 'Product quantity updated successfully',
+                })
+            } else {
+                res.status(404).json({
+                    status: 'error',
+                    message: 'Cart or product not found',
+                })
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Server error')
+        }
+    })
+    .delete('/:cid', async (req, res) => {
+        try {
+            const { cid } = req.params
+            const result = await cartService.deleteAllProducts(cid)
+        
+            if (result.success) {
+                return res.json({
+                    status: 'success',
+                    message: result.message,
+                })
+            } else {
+                return res.status(404).json({
+                    status: 'error',
+                    message: result.message,
+                })
+            }
+        } catch (error) {
+            console.error(error)
             res.status(500).send('Server error')
         }
     })

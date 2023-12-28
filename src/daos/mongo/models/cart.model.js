@@ -1,15 +1,12 @@
 const { Schema, model } = require('mongoose')
 
 const cartSchema = new Schema({
-    /* id: {
-        type: Number,
-        required: true
-    }, */
     products: [
         {
             product: {
-                type: Number,
-                ref: 'Product'
+                type: Schema.Types.ObjectId,
+                ref: 'Product',
+                required: true
             },
             quantity: {
                 type: Number,
@@ -17,6 +14,10 @@ const cartSchema = new Schema({
             },
         },
     ],
+})
+
+cartSchema.pre('findById', function(){
+    this.populate('products.product')
 })
 
 exports.cartModel = model('cart', cartSchema)

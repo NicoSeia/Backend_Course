@@ -55,6 +55,74 @@ class cartDaoMongo {
         console.log("Product added to cart successfully")
     }
 
+    async removeProductFromCart(cartId, productId) {
+        const cart = await this.model.findOne({ _id: cartId })
+        
+        if (!cart) {
+            return { success: false }
+        }
+        
+        cart.products = cart.products.filter(
+            (product) => product.product.toString() !== productId
+        )
+        
+        await cart.save()
+        
+        return { success: true }
+        
+    }
+
+    async updateCart(cartId, newProduct) {
+        const cart = await this.model.findById(cartId)
+
+        if(!cart){
+            return { success: false}
+        }
+
+        cart.products = newProduct
+
+        await cart.save()
+
+        return { success: true }
+    }
+
+    async updateProductQuantity(cartId, productId, newQuantity) {
+        const cart = await this.model.findById(cartId)
+
+        if (!cart) {
+            return { success: false }
+        }
+
+        const productIndex = cart.products.findIndex(
+            (item) => item.product.toString() === productId
+        )
+
+        if (productIndex !== -1) {
+            cart.products[productIndex].quantity = newQuantity
+
+            await cart.save()
+
+            return { success: true }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async deleteAllProducts(cartId) {
+        const cart = await this.model.findById(cartId)
+
+        if (!cart) {
+            return { success: false, message: 'Cart not found' }
+        }
+    
+        cart.products = [];
+    
+        await cart.save();
+    
+        return { success: true, message: 'All products deleted from the cart' }
+    }
+
+
 }
 
 module.exports = cartDaoMongo
