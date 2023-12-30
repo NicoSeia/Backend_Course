@@ -1,16 +1,26 @@
+
 <main>
     <header>
-        <h2>You can find all products</h2>
+        <h3 class="text-center">You can find all products</h3>
     </header>
-    <div>
+    <div class="items-product">
         <ul>
-            {{#each products}}
+            {{#each docs}}
             <li>Title: {{this.title}}</li>
             <li>Price: ${{this.price}}</li>
             <li>Stock: {{this.stock}}</li>
             <hr>
             {{/each}}
         </ul>
+    </div>
+    <div class="text-center" style="margin-top: 20px">
+        {{#if hasPrevPage}}
+            <a href="/?pageNumber={{prevPage}}" class="btn btn-dark" style="margin-right: 10px">Prev</a>
+        {{/if}}
+        <span class="page-number" style="margin-right: 10px">{{page}}</span>
+        {{#if hasNextPage}}
+            <a href="/?pageNumber={{nextPage}}" class="btn btn-dark">Next</a>
+        {{/if}}
     </div>
 </main>
 

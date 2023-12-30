@@ -20,20 +20,20 @@ router
     })
     .get('/:pid', async (req,res)=>{
         try{
-            const pid = req.params.pid;
-            const filteredProduct = await productService.getProductById(pid);
+            const pid = req.params.pid
+            const filteredProduct = await productService.getProductById(pid)
             if(filteredProduct){
                 res.json({
                     status: 'succes',
                     payload: filteredProduct
-                });
+                })
             }
             else{
-                res.status(404).send("Product not exist");
+                res.status(404).send("Product not exist")
             }
         }catch(error) {
-            console.error(error);
-            res.status(500).send('Server error');
+            console.error(error)
+            res.status(500).send('Server error')
         }
         })
     .post('/', async (req,res)=>{

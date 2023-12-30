@@ -1,0 +1,14 @@
+<main>
+    <header>
+        <h3 class="text-center">Product: </h3>
+    </header>
+    <div class="text-center">
+        {{#each filteredProduct}}
+        <p>{{this.thumbnail}}</p>
+        <p><strong>Title: </strong>{{this.title}}</p>
+        <p><strong>Description: </strong>{{this.description}}</p>
+        <p><strong>Price: </strong>${{this.price}}</p>
+        <p><strong>Available: </strong>{{this.stock}}</p>
+        {{/each}}
+    </div>
+</main>

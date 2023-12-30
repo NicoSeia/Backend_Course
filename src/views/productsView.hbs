@@ -1,0 +1,24 @@
+<main>
+    <header>
+        <h3 class="text-center">List of Products</h3>
+    </header>
+    <div class="items-product">
+        <ul>
+            {{#each docs}}
+                <li>{{this.thumbnail}}</li>
+                <li>Title: {{this.title}}</li>
+                <a href="/products/details/{{this._id}}" class="btn btn-dark" style="margin: 5px">Details</a>
+                <hr>
+            {{/each}}
+        </ul>
+    </div>
+    <div class="text-center" style="margin-top: 20px">
+        {{#if hasPrevPage}}
+            <a href="/products?pageNumber={{prevPage}}" class="btn btn-dark" style="margin-right: 10px">Prev</a>
+        {{/if}}
+        <span class="page-number" style="margin-right: 10px">{{page}}</span>
+        {{#if hasNextPage}}
+            <a href="/products?pageNumber={{nextPage}}" class="btn btn-dark">Next</a>
+        {{/if}}
+    </div>
+</main>

@@ -16,7 +16,6 @@ class productDaoMongo {
               console.log("Incorrect product: One of these properties is not valid")
             }else{
                 const lastProduct = await this.model.findOne({}, {}, { sort: { 'id': -1 } })
-                const lastId = lastProduct ? lastProduct.id : 0
                 const newProduct = new this.model({
                     title,
                     description,
@@ -33,13 +32,35 @@ class productDaoMongo {
         }
     }
 
-    async getProducts(){
-        const products = await this.model.find({ isActive: true }).lean()
-        return products
+    async getProducts({ limit = 10, pageNumber = 1, sort, query } = {}){
+        const filter = { isActive: true }
+        if (query) {
+            filter.$or = [
+                { title: { $regex: query, $options: 'i' } },
+                { description: { $regex: query, $options: 'i' } },
+                { category: { $regex: query, $options: 'i' } },
+            ]
+        }
+        const options = {
+            limit: parseInt(limit),
+            page: parseInt(pageNumber),
+            sort: sort ? { price: sort === 'asc' ? 1 : -1 } : undefined,
+            lean: true
+        }
+
+        const result = await this.model.paginate(filter, options)
+        return {
+            docs: result.docs,
+            hasPrevPage: result.hasPrevPage,
+            hasNextPage: result.hasNextPage,
+            prevPage: result.prevPage,
+            nextPage: result.nextPage,
+            page: result.page
+        }
     }
 
     async getProductById(pid){
-        const product = await this.model.findById(pid).lean()
+        const product = await this.model.findOne({ _id: pid }).lean()
 
         if (product) {
             return [product]
@@ -74,8 +95,8 @@ class productDaoMongo {
         }
     }
 
-    async deleteProduct(id){
-        const product = await this.model.findById(id)
+    async deleteProduct(pid){
+        const product = await this.model.findOne({ _id: pid })
         if (product) {
             product.isActive = false
 
