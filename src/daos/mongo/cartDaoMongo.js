@@ -32,12 +32,23 @@ class cartDaoMongo {
     }
 
     async addProductToCart(cartId, productId) {
-        const cart = await this.model.findById(cartId)
+        let cart
 
+    if (!cartId) {
+        const newCart = await this.model.create({
+            products: [],
+        })
+        cart = newCart
+    } else {
+        cart = await this.model.findById(cartId)
+        
         if (!cart) {
-            console.log("Cart not found")
-            return
+            const newCart = await this.model.create({
+                products: [],
+            })
+            cart = newCart
         }
+    }
 
         const existingProductIndex = cart.products.findIndex((item) => item.product.equals(productId))
 
@@ -53,6 +64,10 @@ class cartDaoMongo {
         await cart.save()
 
         console.log("Product added to cart successfully")
+        return {
+            success: true,
+            message: 'Product added to cart successfully',
+        }
     }
 
     async removeProductFromCart(cartId, productId) {
