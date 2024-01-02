@@ -20,7 +20,7 @@
     })
 
     function addToCart(productId) {
-        fetch(`/api/cart/add/some-cart-id/${productId}`, { method: 'POST' })
+        fetch(`/api/cart/add/${productId}`, { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {

@@ -152,21 +152,13 @@ router
             res.status(500).send('Server error')
         }
     })
-    .post('/add/:cartId/:pid', async (req, res) => {
+    .post('/add/:pid', async (req, res) => {
         try {
-            const { cartId, pid } = req.params
+            const { pid } = req.params
 
-            // Verificar si el carrito existe
-            let cart = await cartService.getCartById(cartId)
+            const cartId = '659455545a9b96347f29314d'
 
-            // Si no existe, crea uno nuevo
-            if (!cart.cart) {
-                const newCart = await cartService.createCart()
-                cart = { cart: newCart }
-            }
-
-            // Agregar el producto al carrito
-            await cartService.addProductToCart(cart.cart._id, pid)
+            await cartService.addProductToCart(cartId, pid)
 
             res.json({
                 status: 'success',

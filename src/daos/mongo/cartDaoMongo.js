@@ -21,7 +21,7 @@ class cartDaoMongo {
     }
 
     async getCartById(cid) {
-        const cart = await this.model.findById(cid)
+        const cart = await this.model.findOne({ _id: cid })
 
         if (cart) {
             return { cart: cart.toObject() }
@@ -32,23 +32,14 @@ class cartDaoMongo {
     }
 
     async addProductToCart(cartId, productId) {
-        let cart
-
-    if (!cartId) {
-        const newCart = await this.model.create({
-            products: [],
-        })
-        cart = newCart
-    } else {
-        cart = await this.model.findById(cartId)
-        
+        let cart = await this.model.findOne({ _id: cartId })
+            
         if (!cart) {
             const newCart = await this.model.create({
-                products: [],
+               products: [],
             })
             cart = newCart
         }
-    }
 
         const existingProductIndex = cart.products.findIndex((item) => item.product.equals(productId))
 
@@ -88,7 +79,7 @@ class cartDaoMongo {
     }
 
     async updateCart(cartId, newProduct) {
-        const cart = await this.model.findById(cartId)
+        const cart = await this.model.findOne({ _id: cartId })
 
         if(!cart){
             return { success: false}
@@ -102,7 +93,7 @@ class cartDaoMongo {
     }
 
     async updateProductQuantity(cartId, productId, newQuantity) {
-        const cart = await this.model.findById(cartId)
+        const cart = await this.model.findOne({ _id: cartId })
 
         if (!cart) {
             return { success: false }
@@ -124,7 +115,7 @@ class cartDaoMongo {
     }
 
     async deleteAllProducts(cartId) {
-        const cart = await this.model.findById(cartId)
+        const cart = await this.model.findOne({ _id: cartId })
 
         if (!cart) {
             return { success: false, message: 'Cart not found' }
