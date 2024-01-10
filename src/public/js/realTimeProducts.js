@@ -2,7 +2,7 @@
 const socket = io()
 
 socket.on('products', (data) => {
-  //console.log(data)
+  console.log('Received products:', data);
   const productsList = document.getElementById('products')
   productsList.innerHTML = ""
 

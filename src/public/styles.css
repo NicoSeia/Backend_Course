@@ -1,0 +1,27 @@
+.section_account {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-group button {
+    width: 100%;
+    text-align: center;
+}
+
+.welcome {
+    font-size: 24px;
+    color: #0d630f;
+    margin-top: 15px;
+    text-align: center;
+}

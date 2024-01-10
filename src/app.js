@@ -1,23 +1,47 @@
 const express = require('express')
 const handlebars = require('express-handlebars')
-const app = express()
 const { Server } = require('socket.io')
 const { connectDb } = require('./config/config.js')
 
 const productRouter = require('./routes/products.router.js')
 const cartRouter = require('./routes/carts.router.js')
 const viewsRouter = require('./routes/views.router.js')
+const sessionRouter = require('./routes/session.router.js')
 const ProductManager = require('./daos/fileSystem/productManager.js')
 
+const mongoStore = require('connect-mongo')
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const session = require('express-session')
+
+const handlebarsHelpers = require('handlebars-helpers')()
+const eq = handlebarsHelpers.eq
+
+const app = express()
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname+'/public'))
+app.use(session({
+  store: mongoStore.create({
+    mongoUrl: 'mongodb+srv://nicolasseia0:arCZpn6vklZ6nebR@cluster0.bmytq5v.mongodb.net/ecommerce?retryWrites=true&w=majority', 
+    mongoOptions: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    },
+    ttl: 15000000000,
+  }),
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}))
 
 /* The code `app.engine('handlebars', handlebars.engine())` sets the template engine for the
 application to Handlebars. It tells Express to use Handlebars as the view engine. */
 app.engine('hbs', handlebars.engine({
-  extname: '.hbs'
+  extname: '.hbs',
+  helpers: {
+    eq: eq
+  }
 }))
 app.set('view engine', 'hbs')
 app.set('views', __dirname + '/views')
@@ -25,10 +49,11 @@ app.set('views', __dirname + '/views')
 app.use('/api/products', productRouter)
 app.use('/api/carts', cartRouter)
 app.use('/', viewsRouter)
+app.use('/api/session', sessionRouter)
 
 const serverHttp = app.listen(8080, () => {
-  console.log(`Example app listening on port 8080`);
-});
+  console.log(`Example app listening on port 8080`)
+})
 
 //connection to data base
 connectDb()
@@ -59,6 +84,8 @@ io.on('connection', socket => {
     await productModel.findByIdAndDelete(deleteProductById)
     
     const productsList = await productModel.find()
+
+    console.log('Products sent:', productsList);
 
     socket.emit('products', productsList)
   })

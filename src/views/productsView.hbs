@@ -2,6 +2,17 @@
     <header>
         <h3 class="text-center">List of Products</h3>
     </header>
+    {{#if user}}
+        {{#eq user.role 'admin'}}
+            <div class="welcome">
+                <p>Welcome Admin, enjoy shopping!</p>
+            </div>
+        {{else}}
+            <div class="welcome">
+                <p>Welcome {{user.first_name}} {{user.last_name}} , enjoy shopping!</p>
+            </div>
+        {{/eq}}
+    {{/if}}
     <div class="items-product">
         <ul>
             {{#each docs}}
