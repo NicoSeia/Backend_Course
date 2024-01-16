@@ -12,6 +12,8 @@ const ProductManager = require('./daos/fileSystem/productManager.js')
 const mongoStore = require('connect-mongo')
 
 const session = require('express-session')
+const passport = require('passport')
+const { initializePassport } = require('./config/passport.config.js')
 
 const handlebarsHelpers = require('handlebars-helpers')()
 const eq = handlebarsHelpers.eq
@@ -34,6 +36,13 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }))
+
+initializePassport()
+app.use(session({
+  secret: 'secret'
+}))
+app.use(passport.initialize())
+//app.use(passport.session())
 
 /* The code `app.engine('handlebars', handlebars.engine())` sets the template engine for the
 application to Handlebars. It tells Express to use Handlebars as the view engine. */
@@ -64,6 +73,7 @@ const io = new Server(serverHttp)
 const { messageModel } = require('../src/daos/mongo/models/message.model.js')
 //const products = new ProductManager('./src/mockDB/products.json')
 const { productModel } = require('../src/daos/mongo/models/product.model.js')
+
 io.on('connection', socket => {
   console.log('New client connection')
 

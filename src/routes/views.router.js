@@ -75,8 +75,9 @@ router.get('/products', async (req,res) =>{
         const { limit, pageNumber, sort, query } = req.query
         const parsedLimit = limit ? parseInt(limit, 10) : 10
         const userId = req.session && req.session.user ? req.session.user.user : null
+        console.log(userId)
         const user = await userModel.findOne({ _id: userId }).lean()
-        //console.log('User data:', user)
+        console.log('User data:', user)
         const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await productViewService.getProducts({ limit: parsedLimit, pageNumber, sort, query })
         //console.log(docs)
         res.render('productsView', {

@@ -152,7 +152,7 @@ router
             res.status(500).send('Server error')
         }
     })
-    .post('/add/:pid', async (req, res) => {
+    .post('/:pid', async (req, res) => {
         try {
             const { pid } = req.params
 

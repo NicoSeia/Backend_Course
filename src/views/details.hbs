@@ -15,12 +15,12 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.getElementById('addToCartBtn').addEventListener('click', function() {
+    const btn = document.getElementById('addToCartBtn').addEventListener('click', function() {
         addToCart('{{filteredProduct.[0]._id}}')
     })
 
     function addToCart(productId) {
-        fetch(`/api/cart/add/${productId}`, { method: 'POST' })
+        fetch(`/api/carts/${productId}`, { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {

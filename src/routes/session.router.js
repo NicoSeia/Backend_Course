@@ -1,5 +1,7 @@
 const { Router } = require('express')
 const { userModel } = require('../daos/mongo/models/user.model')
+const { createHash, isValidPassword } = require('../util/hashPassword')
+const passport = require('passport')
 
 const router = Router()
 
@@ -10,7 +12,7 @@ router.post('/register', async (req,res) =>{
     if(first_name === '' || last_name === '' || email === '' || password === '') {
         return res.send('All fields must be required')
     }
-
+    
     try {
         const existingUser = await userModel.findOne({ email })
 
@@ -23,7 +25,7 @@ router.post('/register', async (req,res) =>{
             last_name,
             date,
             email,
-            password,
+            password: createHash(password),
             role: 'user'
         }
 
@@ -54,9 +56,16 @@ router.post('/login', async (req,res) => {
     try{
         const user = await userModel.findOne({ email })
         console.log(user.email)
+        console.log(user.password, password)
+        //console.log(user)
 
         if(user.email === 'adminCoder@coder.com' && password === user.password){
+            console.log('-----------')
             req.session.user = {
+                id: user._id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
                 role: 'admin'
             }
             res.redirect('/products')
@@ -67,7 +76,7 @@ router.post('/login', async (req,res) => {
                 return res.send('email or password not valid')
             }
 
-            if (password !== user.password) {
+            if (!isValidPassword(password, { password: user.password })) {
                 return res.send('email or password not valid')
             }
 
@@ -99,6 +108,13 @@ router.get('/logout', async (req,res) =>{
         console.error('Error during logout:', error)
         res.status(500).send({ status: 'error', error: 'Internal Server Error' })
     }
+})
+
+router.get('/github', passport.authenticate('github', {scope: ['user:email']}), async (req,res)=>{})
+
+router.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/login'}),(req, res) => {
+    req.session.user = req.user
+    res.redirect('/products')
 })
 
 module.exports = router
