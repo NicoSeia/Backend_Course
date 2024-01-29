@@ -13,7 +13,9 @@ const mongoStore = require('connect-mongo')
 
 const session = require('express-session')
 const passport = require('passport')
-const { initializePassport } = require('./config/passport.config.js')
+const { initializePassport } = require('./passport-jwt/passport.config.js')
+
+const cookie = require('cookie-parser')
 
 const handlebarsHelpers = require('handlebars-helpers')()
 const eq = handlebarsHelpers.eq
@@ -23,6 +25,7 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname+'/public'))
+app.use(cookie())
 app.use(session({
   store: mongoStore.create({
     mongoUrl: 'mongodb+srv://nicolasseia0:arCZpn6vklZ6nebR@cluster0.bmytq5v.mongodb.net/ecommerce?retryWrites=true&w=majority', 
@@ -36,6 +39,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }))
+
 
 initializePassport()
 app.use(session({
@@ -73,6 +77,7 @@ const io = new Server(serverHttp)
 const { messageModel } = require('../src/daos/mongo/models/message.model.js')
 //const products = new ProductManager('./src/mockDB/products.json')
 const { productModel } = require('../src/daos/mongo/models/product.model.js')
+const cookieParser = require('cookie-parser')
 
 io.on('connection', socket => {
   console.log('New client connection')

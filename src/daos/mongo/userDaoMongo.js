@@ -21,6 +21,14 @@ class userDaoMongo {
         return await this.userModel.findOneAndUpdate({_id: uid}, userUpdate)
     }
 
+    async updateUserRole(userId, newRole){
+        try{
+            return await this.userModel.findByIdAndUpdate(userId, { role: newRole }, { new: true })
+        }catch (err){
+            console.error('Error updating user role:', error)
+        }
+    }
+
     async deleteUser(uid) {
         return await this.userModel.findOneAndDelete({_id: uid})
     }

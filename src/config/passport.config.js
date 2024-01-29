@@ -2,7 +2,7 @@ const passport = require('passport')
 const userDaoMongo = require('../daos/mongo/userDaoMongo')
 const userService = new userDaoMongo()
 const GithubStrategy = require('passport-github2')
-
+/* 
 exports.initializePassport = () => {
 
     passport.use('github', new GithubStrategy({
@@ -21,6 +21,7 @@ exports.initializePassport = () => {
                     password: '123'
                 }
                 let result = await userService.createUser(newUser)
+                console.log("Este es el nuevo usaurio", result)
                 return done(null, result)
             }
             done(null, user)
@@ -38,4 +39,4 @@ exports.initializePassport = () => {
         done(null, user)
     })
 
-}
+} */

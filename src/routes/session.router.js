@@ -2,6 +2,14 @@ const { Router } = require('express')
 const { userModel } = require('../daos/mongo/models/user.model')
 const { createHash, isValidPassword } = require('../util/hashPassword')
 const passport = require('passport')
+const userDaoMongo = require('../daos/mongo/userDaoMongo')
+const cartDaoMongo = require('../daos/mongo/cartDaoMongo')
+const { generateToken } = require('../util/createToken')
+const { passportCall } = require('../passport-jwt/passportCall.middleware')
+const { authorization } = require('../passport-jwt/authorization.middleware')
+
+const userService = new userDaoMongo()
+const cartService = new cartDaoMongo()
 
 const router = Router()
 
@@ -14,11 +22,14 @@ router.post('/register', async (req,res) =>{
     }
     
     try {
-        const existingUser = await userModel.findOne({ email })
+        const existingUser = await userService.getUserBy({email})
 
+        console.log(existingUser)
         if (existingUser) {
             return res.send({ status: 'error', error: 'This user already exists' })
         }
+
+        const cart = await cartService.createCart()
 
         const newUser = {
             first_name,
@@ -26,12 +37,21 @@ router.post('/register', async (req,res) =>{
             date,
             email,
             password: createHash(password),
+            cart: cart._id,
             role: 'user'
         }
 
-        const result = await userModel.create(newUser)
+        const result = await userService.createUser(newUser)
 
-        res.send({
+        const token = generateToken({
+            id: result._id,
+            role: result.role
+        })
+
+        res.cookie('token', token, {
+            maxAge: 60*60*1000*24,
+            httpOnly: true,
+        }).send({
             status: 'success',
             payload: {
                 id: result._id,
@@ -54,12 +74,11 @@ router.post('/login', async (req,res) => {
     }
 
     try{
-        const user = await userModel.findOne({ email })
-        console.log(user.email)
-        console.log(user.password, password)
-        //console.log(user)
+        const user = await userService.getUserBy({ email })
 
         if(user.email === 'adminCoder@coder.com' && password === user.password){
+
+            await userService.updateUserRole(user._id, 'admin')
             console.log('-----------')
             req.session.user = {
                 id: user._id,
@@ -68,7 +87,15 @@ router.post('/login', async (req,res) => {
                 email: user.email,
                 role: 'admin'
             }
-            res.redirect('/products')
+            const token = generateToken({
+                id: user._id,
+                role: user.role
+            })
+
+            res.cookie('token', token, {
+                maxAge: 60*60*1000*24,
+                httpOnly: true,
+            }).redirect('/products')
         }
         else{
 
@@ -85,7 +112,15 @@ router.post('/login', async (req,res) => {
                 role: user.role
             }
 
-            res.redirect('/products')
+            const token = generateToken({
+                id: user._id,
+                role: user.role
+            })
+
+            res.cookie('token', token, {
+                maxAge: 60*60*1000*24,
+                httpOnly: true,
+            }).redirect('/products')
         }
 
     } catch(error) {
@@ -108,6 +143,10 @@ router.get('/logout', async (req,res) =>{
         console.error('Error during logout:', error)
         res.status(500).send({ status: 'error', error: 'Internal Server Error' })
     }
+})
+
+router.get('/current', [passportCall('jwt'), authorization(['ADMIN'])], (req,res) => {
+    res.send('sensible data')
 })
 
 router.get('/github', passport.authenticate('github', {scope: ['user:email']}), async (req,res)=>{})
