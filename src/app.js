@@ -1,13 +1,7 @@
 const express = require('express')
 const handlebars = require('express-handlebars')
-const { Server } = require('socket.io')
-const { connectDb } = require('./config/config.js')
 
-const productRouter = require('./routes/products.router.js')
-const cartRouter = require('./routes/carts.router.js')
-const viewsRouter = require('./routes/views.router.js')
-const sessionRouter = require('./routes/session.router.js')
-const ProductManager = require('./daos/fileSystem/productManager.js')
+const { connectDb } = require('./config/config.js')
 
 const mongoStore = require('connect-mongo')
 
@@ -15,7 +9,10 @@ const session = require('express-session')
 const passport = require('passport')
 const { initializePassport } = require('./passport-jwt/passport.config.js')
 
+const appRouter = require('./routes/general.router.js')
+
 const cookie = require('cookie-parser')
+const configureSocketIO = require('./helpers/socketIO.js')
 
 const handlebarsHelpers = require('handlebars-helpers')()
 const eq = handlebarsHelpers.eq
@@ -40,6 +37,7 @@ app.use(session({
   saveUninitialized: true
 }))
 
+app.use(appRouter)
 
 initializePassport()
 app.use(session({
@@ -59,10 +57,6 @@ app.engine('hbs', handlebars.engine({
 app.set('view engine', 'hbs')
 app.set('views', __dirname + '/views')
 
-app.use('/api/products', productRouter)
-app.use('/api/carts', cartRouter)
-app.use('/', viewsRouter)
-app.use('/api/session', sessionRouter)
 
 const serverHttp = app.listen(8080, () => {
   console.log(`Example app listening on port 8080`)
@@ -71,68 +65,8 @@ const serverHttp = app.listen(8080, () => {
 //connection to data base
 connectDb()
 
-/* The code block is setting up a WebSocket server using Socket.IO. */
-const io = new Server(serverHttp)
-
-const { messageModel } = require('../src/daos/mongo/models/message.model.js')
-//const products = new ProductManager('./src/mockDB/products.json')
-const { productModel } = require('../src/daos/mongo/models/product.model.js')
-const cookieParser = require('cookie-parser')
-
-io.on('connection', socket => {
-  console.log('New client connection')
-
-  socket.on('newProduct', async addProduct => {
-    /* await products.addProduct(addProduct)
-    const productsList = await products.getProducts() */
-    const newProduct = new productModel(addProduct)
-    await newProduct.save()
-
-    const productsList = await productModel.find()
-
-    socket.emit('products', productsList)
-  })
-
-  socket.on('deleteProduct', async deleteProductById => {
-    /* await products.deleteProduct(deleteProductById)
-    const productsList = await products.getProducts() */
-    await productModel.findByIdAndDelete(deleteProductById)
-    
-    const productsList = await productModel.find()
-
-    console.log('Products sent:', productsList);
-
-    socket.emit('products', productsList)
-  })
-
-  socket.on('message', async (data) => {
-    console.log(`${data.user}: ${data.message}`)
-
-    try {
-      const newMessage = {
-        message: data.message,
-        timestamp: new Date()
-      }
-  
-      let userDocument = await messageModel.findOne({ user: data.user })
-  
-      if (!userDocument) {
-        userDocument = new messageModel({
-          user: data.user,
-          messages: [newMessage]
-        })
-      } else {
-        userDocument.messages.push(newMessage)
-      }
-  
-      await userDocument.save()
-  
-      io.emit('messageLogs', { user: data.user, message: newMessage })
-    } catch (error) {
-      console.error('Error saving message to database:', error)
-    }
-  })
-})
+const io = configureSocketIO(serverHttp)
+module.exports = io
 
 
 
