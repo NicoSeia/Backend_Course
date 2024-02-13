@@ -1,7 +1,7 @@
 const express = require('express')
 const handlebars = require('express-handlebars')
 
-const { connectDb } = require('./config/config.js')
+const { connectDb, configObject } = require('./config/config.js')
 
 const mongoStore = require('connect-mongo')
 
@@ -17,6 +17,7 @@ const configureSocketIO = require('./helpers/socketIO.js')
 const handlebarsHelpers = require('handlebars-helpers')()
 const eq = handlebarsHelpers.eq
 
+const PORT = process.env.PORT
 const app = express()
 
 app.use(express.json())
@@ -58,8 +59,8 @@ app.set('view engine', 'hbs')
 app.set('views', __dirname + '/views')
 
 
-const serverHttp = app.listen(8080, () => {
-  console.log(`Example app listening on port 8080`)
+const serverHttp = app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`)
 })
 
 //connection to data base

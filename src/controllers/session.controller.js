@@ -1,7 +1,7 @@
 const userDaoMongo = require('../daos/mongo/userDaoMongo')
 const cartDaoMongo = require('../daos/mongo/cartDaoMongo')
-const { createHash, isValidPassword } = require('../util/hashPassword')
-const { generateToken } = require('../util/createToken')
+const { createHash, isValidPassword } = require('../utils/hashPassword')
+const { generateToken } = require('../utils/createToken')
 
 
 class SessionController {
