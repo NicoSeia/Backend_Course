@@ -17,12 +17,30 @@ const configObject = {
 
 const connectDb = async () => {
     try {
-        await connect(process.env.MONGO_URI)
+        /* await connect(process.env.MONGO_URI) */
+        MongoSingleton.getInstance()
         console.log("Db connected")
     } catch(err) {
         console.log(err)
     }
 }
+
+
+class MongoSingleton {
+    static instance //
+    constructor() {
+      connect(process.env.MONGO_URI)
+    }
+  
+    static getInstance() {
+      if(!this.instance){
+        console.log('Connecting to data base')
+        return this.instance = new MongoSingleton()
+      }
+      console.log('Data base already connected')
+      return this.instance
+    }
+  }
 
 module.exports = {
     configObject,
