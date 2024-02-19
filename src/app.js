@@ -1,5 +1,6 @@
 const express = require('express')
 const handlebars = require('express-handlebars')
+const cors = require('cors')
 
 const { connectDb, configObject } = require('./config/config.js')
 
@@ -24,6 +25,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname+'/public'))
 app.use(cookie())
+app.use(cors())
 app.use(session({
   store: mongoStore.create({
     mongoUrl: 'mongodb+srv://nicolasseia0:arCZpn6vklZ6nebR@cluster0.bmytq5v.mongodb.net/ecommerce?retryWrites=true&w=majority', 

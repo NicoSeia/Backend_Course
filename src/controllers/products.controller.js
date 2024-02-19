@@ -1,27 +1,27 @@
-const productDaoMongo = require('../daos/mongo/productDaoMongo')
+const { productService } = require('../repositories/service')
 
 class ProdcutsController {
     constructor(){
-        this.productService = new productDaoMongo()
+        this.productService = productService
     }
 
     getProducts = async (req,res)=>{
         try{
-            const products = await this.productService.getProducts()
+            const products = await this.productService.get()
             return res.json({
                 status: 'succes',
                 payload: products
             });
         }catch (error){
             console.error(error);
-            res.status(500).send('Server error');
+            res.status(500).send('Server error')
         }
     }
 
     getProductById = async (req,res)=>{
         try{
             const pid = req.params.pid
-            const filteredProduct = await this.productService.getProductById(pid)
+            const filteredProduct = await this.productService.getById(pid)
             if(filteredProduct){
                 res.json({
                     status: 'succes',
@@ -50,7 +50,7 @@ class ProdcutsController {
               category,
             } = req.body
         
-            await this.productService.addProduct(title, description, price, thumbnail, code, stock, status, category);
+            await this.productService.add(title, description, price, thumbnail, code, stock, status, category)
         
               res.json({
                 status: 'success',
@@ -67,7 +67,7 @@ class ProdcutsController {
             const pid = req.params.pid
             
             const {title, description, price, thumbnail, code, stock, status, category} = req.body
-            await this.productService.updateProduct(pid, title, description, price, thumbnail, code, stock, status, category)
+            await this.productService.update(pid, title, description, price, thumbnail, code, stock, status, category)
             res.json({
                 status: 'success',
                 message: 'Product updated successfully',
@@ -80,8 +80,8 @@ class ProdcutsController {
 
     deleteProduct = async (req,res)=>{
         try{
-            const pid = req.params.pid;
-            const deletedProduct = await this.productService.deleteProduct(pid);
+            const pid = req.params.pid
+            const deletedProduct = await this.productService.delete(pid)
 
             if (deletedProduct) {
                 return res.json({

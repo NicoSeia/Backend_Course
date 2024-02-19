@@ -13,6 +13,7 @@ const configObject = {
     PORT: process.env.PORT || 4000,
     mongo_uri: process.env.MONGO_URI,
     jwt_secret_key: process.env.JWT_SECRET_KEY,
+    persistence: process.env.PERSISTENCE,
 }
 
 const connectDb = async () => {

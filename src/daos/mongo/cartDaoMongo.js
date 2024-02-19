@@ -5,7 +5,7 @@ class cartDaoMongo {
         this.model = cartModel
     }
 
-    async createCart() {
+    async create() {
         const newCart = new this.model({
             products: [],
         });
@@ -15,12 +15,12 @@ class cartDaoMongo {
         return newCart.toObject()
     }
 
-    async getCarts() {
+    async get() {
         const carts = await this.model.find()
         return carts
     }
 
-    async getCartById(cid) {
+    async getById(cid) {
         const cart = await this.model.findOne({ _id: cid })
 
         if (cart) {
@@ -31,7 +31,7 @@ class cartDaoMongo {
         }
     }
 
-    async addProductToCart(cartId, productId) {
+    async add(cartId, productId) {
         let cart = await this.model.findOne({ _id: cartId })
             
         if (!cart) {
@@ -61,7 +61,7 @@ class cartDaoMongo {
         }
     }
 
-    async removeProductFromCart(cartId, productId) {
+    async remove(cartId, productId) {
         const cart = await this.model.findOne({ _id: cartId })
         
         if (!cart) {
@@ -78,7 +78,7 @@ class cartDaoMongo {
         
     }
 
-    async updateCart(cartId, newProduct) {
+    async update(cartId, newProduct) {
         const cart = await this.model.findOne({ _id: cartId })
 
         if(!cart){
@@ -92,7 +92,7 @@ class cartDaoMongo {
         return { success: true }
     }
 
-    async updateProductQuantity(cartId, productId, newQuantity) {
+    async updateQuantity(cartId, productId, newQuantity) {
         const cart = await this.model.findOne({ _id: cartId })
 
         if (!cart) {
@@ -114,7 +114,7 @@ class cartDaoMongo {
         }
     }
 
-    async deleteAllProducts(cartId) {
+    async deleteAll(cartId) {
         const cart = await this.model.findOne({ _id: cartId })
 
         if (!cart) {

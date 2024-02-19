@@ -1,8 +1,8 @@
-const messageDaoMongo = require('../daos/mongo/messageDaoMongo')
+const { messageService } = require('../repositories/service')
 
 class messageController {
     constructor(){
-        this.messageService = new messageDaoMongo()
+        this.messageService = messageService
     }
 
     async getAllMessages() {
@@ -25,7 +25,7 @@ class messageController {
 
     async addMessageToUser(user, message) {
         try {
-            return await this.messageService.addMessageToUser(user, message)
+            return await this.messageService.add(user, message)
         } catch (error) {
             console.error('Error adding message to user:', error)
             throw error
@@ -34,7 +34,7 @@ class messageController {
 
     async createUserWithMessage(user, message) {
         try {
-            return await this.messageService.createUserWithMessage(user, message)
+            return await this.messageService.create(user, message)
         } catch (error) {
             console.error('Error creating user with message:', error)
             throw error

@@ -5,7 +5,7 @@ class productDaoMongo {
         this.model = productModel
     }
 
-    async addProduct(title, description, price, thumbnail, code, stock, status, category){
+    async add(title, description, price, thumbnail, code, stock, status, category){
         
         const existingProduct = await this.model.findOne({ code })
 
@@ -32,7 +32,7 @@ class productDaoMongo {
         }
     }
 
-    async getProducts({ limit = 10, pageNumber = 1, sort, query } = {}){
+    async get({ limit = 10, pageNumber = 1, sort, query } = {}){
         const filter = { isActive: true }
         if (query) {
             filter.$or = [
@@ -59,7 +59,7 @@ class productDaoMongo {
         }
     }
 
-    async getProductById(pid){
+    async getById(pid){
         const product = await this.model.findOne({ _id: pid }).lean()
 
         if (product) {
@@ -70,7 +70,7 @@ class productDaoMongo {
         }
     }
 
-    async updateProduct(id, title, description, price, thumbnail, code, stock, status, category){
+    async update(id, title, description, price, thumbnail, code, stock, status, category){
         const updatedProduct = await this.model.findByIdAndUpdate(
             id,
             {
@@ -95,7 +95,7 @@ class productDaoMongo {
         }
     }
 
-    async deleteProduct(pid){
+    async delete(pid){
         const product = await this.model.findOne({ _id: pid })
         if (product) {
             product.isActive = false

@@ -13,7 +13,7 @@ class messageDaoMongo {
         return await this.model.find({ })
     }
 
-    async addMessageToUser(user, message) {
+    async add(user, message) {
         try {
             const userDocument = await this.model.findOne({ user: user })
             if (!userDocument) {
@@ -29,7 +29,7 @@ class messageDaoMongo {
         }
     }
 
-    async createUserWithMessage(user, message) {
+    async create(user, message) {
         try {
             const newUserDocument = new this.model({
                 user: user,

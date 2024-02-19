@@ -1,35 +1,35 @@
-const { userModel } = require("./models/user.model");
+const { userModel } = require("./models/user.model")
 
 class userDaoMongo {
     constructor(){
         this.userModel = userModel
     }
 
-    async getUsers() {
+    async get() {
         return await this.userModel.find({})
     }
 
-    async getUserBy(filter) {
+    async getBy(filter) {
         return await this.userModel.findOne(filter)
     }
 
-    async createUser(newUser) {
+    async create(newUser) {
         return await this.userModel.create(newUser)
     }
 
-    async updateUser(uid, userUpdate) {
+    async update(uid, userUpdate) {
         return await this.userModel.findOneAndUpdate({_id: uid}, userUpdate)
     }
 
-    async updateUserRole(userId, newRole){
+    async updateRole(userId, newRole){
         try{
             return await this.userModel.findByIdAndUpdate(userId, { role: newRole }, { new: true })
         }catch (err){
-            console.error('Error updating user role:', error)
+            console.error('Error updating user role:', err)
         }
     }
 
-    async deleteUser(uid) {
+    async delete(uid) {
         return await this.userModel.findOneAndDelete({_id: uid})
     }
 }
