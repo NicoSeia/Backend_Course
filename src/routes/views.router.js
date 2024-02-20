@@ -1,5 +1,8 @@
 const { Router } = require('express')
 const ViewsController = require('../controllers/views.controller')
+const { isAdmin, isUser } = require('../middlewares/roleVerification')
+const { isAuthenticated } = require('../middlewares/auth.middleware')
+
 
 const router = Router()
 
@@ -15,18 +18,21 @@ const {
 
 router.get('/', home)
 
-router.get('/realTimeProducts', realTimeProducts)
+router.get('/realTimeProducts', isAdmin, realTimeProducts)
 
-router.get('/chat', chat)
+router.get('/chat',isUser , chat)
 
 router.get('/products', products)
 
-router.get('/products/details/:pid', productsDetails)
+router.get('/products/details/:pid', isAuthenticated, productsDetails)
 
 router.get('/login', login)
 
 router.get('/register', register)
 
+/* router.get('/protected-route', isAuthenticated, (req, res) => {
+    res.json({ message: 'Protected route' })
+}) */
 /* router.get('/logout', async (req,res) =>{
     res.render('login')
 }) */

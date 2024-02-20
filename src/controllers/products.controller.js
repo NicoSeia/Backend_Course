@@ -7,7 +7,7 @@ class ProdcutsController {
 
     getProducts = async (req,res)=>{
         try{
-            const products = await this.productService.get()
+            const products = await this.productService.getProducts()
             return res.json({
                 status: 'succes',
                 payload: products
@@ -21,7 +21,7 @@ class ProdcutsController {
     getProductById = async (req,res)=>{
         try{
             const pid = req.params.pid
-            const filteredProduct = await this.productService.getById(pid)
+            const filteredProduct = await this.productService.getProductById(pid)
             if(filteredProduct){
                 res.json({
                     status: 'succes',
@@ -50,7 +50,7 @@ class ProdcutsController {
               category,
             } = req.body
         
-            await this.productService.add(title, description, price, thumbnail, code, stock, status, category)
+            await this.productService.addProduct(title, description, price, thumbnail, code, stock, status, category)
         
               res.json({
                 status: 'success',
@@ -67,7 +67,7 @@ class ProdcutsController {
             const pid = req.params.pid
             
             const {title, description, price, thumbnail, code, stock, status, category} = req.body
-            await this.productService.update(pid, title, description, price, thumbnail, code, stock, status, category)
+            await this.productService.updateProduct(pid, title, description, price, thumbnail, code, stock, status, category)
             res.json({
                 status: 'success',
                 message: 'Product updated successfully',
@@ -81,7 +81,7 @@ class ProdcutsController {
     deleteProduct = async (req,res)=>{
         try{
             const pid = req.params.pid
-            const deletedProduct = await this.productService.delete(pid)
+            const deletedProduct = await this.productService.deleteProduct(pid)
 
             if (deletedProduct) {
                 return res.json({

@@ -1,16 +1,20 @@
 const { createHash, isValidPassword } = require('../utils/hashPassword')
 const { generateToken } = require('../utils/createToken')
 const { cartService, userService } = require('../repositories/service')
+const userDaoMongo = require('../daos/mongo/userDaoMongo')
+const cartDaoMongo = require('../daos/mongo/cartDaoMongo')
 
 
 class SessionController {
     constructor(){
-        this.userService = userService
+        /* this.userService = new userDaoMongo()
+        this.cartService = new cartDaoMongo() */
         this.cartService = cartService
+        this.userService = userService
     }
 
     register = async (req,res) =>{
-        const { first_name, last_name, date, email, password} = req.body
+        const { first_name, last_name, date, email, password, role} = req.body
         //console.log(first_name, last_name, date, email, password)
     
         if(first_name === '' || last_name === '' || email === '' || password === '') {
@@ -18,14 +22,14 @@ class SessionController {
         }
         
         try {
-            const existingUser = await this.userService.getBy({email})
+            const existingUser = await this.userService.getUserBy({email})
     
             console.log(existingUser)
             if (existingUser) {
                 return res.send({ status: 'error', error: 'This user already exists' })
             }
     
-            const cart = await this.cartService.create()
+            const cart = await this.cartService.createCart()
     
             const newUser = {
                 first_name,
@@ -34,10 +38,11 @@ class SessionController {
                 email,
                 password: createHash(password),
                 cart: cart._id,
-                role: 'user'
+                role,
             }
+            console.log('======================', newUser)
     
-            const result = await this.userService.create(newUser)
+            const result = await this.userService.createUser(newUser)
     
             const token = generateToken({
                 id: result._id,
@@ -53,7 +58,8 @@ class SessionController {
                     id: result._id,
                     first_name: result.first_name,
                     last_name: result.last_name,
-                    email: result.email
+                    email: result.email,
+                    role: result.role
                 }
             })
         } catch (error) {
@@ -70,8 +76,8 @@ class SessionController {
         }
     
         try{
-            const user = await this.userService.getBy({ email })
-    
+            const user = await this.userService.getUserBy({ email })
+            
             if(user.email === 'adminCoder@coder.com' && password === user.password){
     
                 await this.userService.updateRole(user._id, 'admin')

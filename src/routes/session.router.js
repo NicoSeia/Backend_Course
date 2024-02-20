@@ -3,6 +3,7 @@ const passport = require('passport')
 const { passportCall } = require('../passport-jwt/passportCall.middleware')
 const { authorization } = require('../passport-jwt/authorization.middleware')
 const SessionController = require('../controllers/session.controller')
+const { isAuthenticated } = require('../middlewares/auth.middleware')
 
 const router = Router()
 
@@ -27,5 +28,10 @@ router.get('/current', [passportCall('jwt'), authorization(['ADMIN'])], current)
 router.get('/github', passport.authenticate('github', {scope: ['user:email']}), github)
 
 router.get('/githubcallback', passport.authenticate('github', {failureRedirect: '/login'}), githubCallback)
+
+router.get('/protected-route', isAuthenticated, (req, res) => {
+    res.json({ message: 'Protected route' })
+})
+
 
 module.exports = router

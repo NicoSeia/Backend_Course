@@ -8,7 +8,7 @@ class CartController {
 
     getCarts = async (req,res)=>{
         try{
-            const allCarts = await this.cartService.get()
+            const allCarts = await this.cartService.getCarts()
             res.json({
                 status: 'success',
                 payload: allCarts
@@ -21,7 +21,7 @@ class CartController {
 
     createCart = async (req,res)=>{
         try{
-            const newCart = await this.cartService.create()
+            const newCart = await this.cartService.createCart()
             res.json({
                 status: 'success',
                 payload: newCart
@@ -35,7 +35,7 @@ class CartController {
     getCartById = async (req,res)=> {
         try{
             const cid = req.params.cid
-            const filteredCart = await this.cartService.getById(cid)
+            const filteredCart = await this.cartService.getCartById(cid)
             if(filteredCart){
                 res.json({
                     status: 'success',
@@ -56,7 +56,7 @@ class CartController {
             const { cid, pid} = req.params
             const cartId = mongoose.Types.ObjectId(cid)
             const productId = mongoose.Types.ObjectId(pid)
-            const productInCart = await this.cartService.add(cartId, productId)
+            const productInCart = await this.cartService.addProductToCart(cartId, productId)
             res.json({
                 status: 'success',
                 payload: productInCart
@@ -71,7 +71,7 @@ class CartController {
     removeProductFromCart = async (req,res) =>{
         try {
             const { cid, pid } = req.params
-            const result = await this.cartService.remove(cid, pid)
+            const result = await this.cartService.removeProductFromCart(cid, pid)
       
             if (result.success) {
               res.json({
@@ -94,7 +94,7 @@ class CartController {
         try {
             const { cid } = req.params
             const { products } = req.body
-            const result = await this.cartService.update(cid, products)
+            const result = await this.cartService.updateCart(cid, products)
         
             if (result.success) {
                 res.json({
@@ -118,7 +118,7 @@ class CartController {
             const { cid, pid } = req.params
             const { quantity } = req.body
         
-            const result = await this.cartService.updateQuantity(cid, pid, quantity)
+            const result = await this.cartService.updateProductQuantity(cid, pid, quantity)
         
             if (result.success) {
                 res.json({
@@ -140,7 +140,7 @@ class CartController {
     deleteAllProducts = async (req, res) => {
         try {
             const { cid } = req.params
-            const result = await this.cartService.deleteAll(cid)
+            const result = await this.cartService.deleteAllProducts(cid)
         
             if (result.success) {
                 return res.json({
@@ -163,9 +163,9 @@ class CartController {
         try {
             const { pid } = req.params
 
-            const cartId = '659455545a9b96347f29314d'
+            const cartId = '65d3cd1ce580263984c61a76'
 
-            await this.cartService.add(cartId, pid)
+            await this.cartService.addProductToCart(cartId, pid)
 
             res.json({
                 status: 'success',

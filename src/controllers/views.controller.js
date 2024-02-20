@@ -1,8 +1,13 @@
+const productDaoMongo = require('../daos/mongo/productDaoMongo')
+const userDaoMongo = require('../daos/mongo/userDaoMongo')
 const { productService, userService } = require('../repositories/service')
+
 
 
 class ViewsController {
     constructor(){
+        /* this.productViewService = new productDaoMongo()
+        this.userViewService = new userDaoMongo() */
         this.productViewService = productService
         this.userViewService = userService
         console.log('UserService: ', userService)
@@ -13,8 +18,8 @@ class ViewsController {
             const { limit, pageNumber, sort, query } = req.query
             const parsedLimit = limit ? parseInt(limit, 10) : 10
             const userId = req.session && req.session.user ? req.session.user.user : null
-            const user = await this.userViewService.getBy({ _id: userId })
-            const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await this.productViewService.get({ limit: parsedLimit, pageNumber, sort, query })
+            const user = await this.userViewService.getUserBy({ _id: userId })
+            const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await this.productViewService.getProducts({ limit: parsedLimit, pageNumber, sort, query })
             //console.log(docs)
             res.render('home', {
                 title: 'Home',
@@ -37,8 +42,8 @@ class ViewsController {
             const { limit, pageNumber, sort, query } = req.query
             const parsedLimit = limit ? parseInt(limit, 10) : 10
             const userId = req.session && req.session.user ? req.session.user.user : null
-            const user = await this.userViewService.getBy({ _id: userId })
-            const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await this.productViewService.get({ limit: parsedLimit, pageNumber, sort, query })
+            const user = await this.userViewService.getUserBy({ _id: userId })
+            const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await this.productViewService.getProducts({ limit: parsedLimit, pageNumber, sort, query })
             //console.log(docs)
             res.render('realTimeProducts', {
                 title: 'Real Time',
@@ -58,7 +63,7 @@ class ViewsController {
 
     chat = async (req,res) => {
         const userId = req.session && req.session.user ? req.session.user.user : null
-        const user = await this.userViewService.getBy({ _id: userId })
+        const user = await this.userViewService.getUserBy({ _id: userId })
         try{
             res.render('chat', {
             title: "Chat",
@@ -76,9 +81,9 @@ class ViewsController {
             const parsedLimit = limit ? parseInt(limit, 10) : 10
             const userId = req.session && req.session.user ? req.session.user.user : null
             console.log(userId)
-            const user = await this.userViewService.getBy({ _id: userId })
+            const user = await this.userViewService.getUserBy({ _id: userId })
             console.log('User data:', user)
-            const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await this.productViewService.get({ limit: parsedLimit, pageNumber, sort, query })
+            const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await this.productViewService.getProducts({ limit: parsedLimit, pageNumber, sort, query })
             //console.log(docs)
             res.render('productsView', {
                 title: 'Products View',
@@ -99,7 +104,7 @@ class ViewsController {
     productsDetails = async (req,res) =>{
         try{
             const pid = req.params.pid;
-            const filteredProduct = await this.productViewService.getById(pid)
+            const filteredProduct = await this.productViewService.getProductById(pid)
             if(filteredProduct){
                 res.render('details', {
                     title: 'Product Detail',

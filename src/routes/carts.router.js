@@ -1,6 +1,7 @@
 const { Router } = require('express')
 
 const CartController = require('../controllers/carts.controller')
+const { authenticateUser } = require('../middlewares/auth.middleware')
 
 const router = Router()
 const {
@@ -23,7 +24,7 @@ router
     .put('/:cid', updateCart)
     .put('/:cid/products/:pid', updateProductQuantity)
     .delete('/:cid', deleteAllProducts)
-    .post('/:pid', addProductToCart)
+    .post('/:pid', authenticateUser, addProductToCart)
 
 
 
