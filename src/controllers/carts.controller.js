@@ -54,8 +54,8 @@ class CartController {
     addProductToCart = async (req,res)=>{
         try{
             const { cid, pid} = req.params
-            const cartId = mongoose.Types.ObjectId(cid)
-            const productId = mongoose.Types.ObjectId(pid)
+            const cartId = new mongoose.Types.ObjectId(cid)
+            const productId = new mongoose.Types.ObjectId(pid)
             const productInCart = await this.cartService.addProductToCart(cartId, productId)
             res.json({
                 status: 'success',
@@ -159,7 +159,7 @@ class CartController {
         }
     }
 
-    addProductToCart = async (req, res) => {
+    addProductToCart2 = async (req, res) => {
         try {
             const { pid } = req.params
 

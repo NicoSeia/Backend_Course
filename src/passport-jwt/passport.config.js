@@ -7,8 +7,8 @@ const extract_jwt = passport_jwt.ExtractJwt
 const initializePassport = () => {
     const cookieExtractor = req => {
         let token = null
-        console.log("request cookie initialize passport: ", req)
-        console.log("request cookie initialize passport: ", req.cookies)
+        /* console.log("request cookie initialize passport: ", req)
+        console.log("request cookie initialize passport: ", req.cookies) */
         if (req && req.cookies) {
             token = req.cookies['token']
         }

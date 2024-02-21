@@ -148,7 +148,17 @@ class SessionController {
     }
 
     current = (req,res) => {
-        res.send('sensible data')
+        if (req.user) {
+            const { first_name, last_name, role } = req.user
+            const userDTO = {
+                first_name: first_name,
+                last_name: last_name,
+                role: role
+            }
+            res.json(userDTO)
+        } else {
+            res.status(401).json({ error: "Unauthorized" })
+        }
     }
 
     github = async (req,res)=>{}

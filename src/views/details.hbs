@@ -14,64 +14,19 @@
     </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-{{!-- <script>
-    const btn = document.getElementById('addToCartBtn').addEventListener('click', function() {
-        addToCart('{{filteredProduct.[0]._id}}')
-    })
 
-    function addToCart(productId) {
-        fetch(`/api/carts/${productId}`, { method: 'POST' })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Product added to cart successfully!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                } else {
-                    console.error('Error adding product to cart:', data.message)
-                }
-            })
-            .catch(error => {
-                console.error('Error adding product to cart:', error)
-            })
-    }
-</script> --}}
 <script>
     const btn = document.getElementById('addToCartBtn')
 
     if (btn) {
         btn.addEventListener('click', function() {
             const productId = '{{filteredProduct.[0]._id}}'
-            checkAuthenticationAndAddToCart(productId)
-        })
-    }
-
-    function checkAuthenticationAndAddToCart(productId) {
-        fetch('/api/session/protected-route') 
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                } else {
-                    throw new Error('User not authenticated')
-                }
-            })
-            .then(data => {
-                if (data.authenticated) {
-                    addToCart(productId)
-                } else {
-                    redirectToLogin()
-                }
-            })
-            .catch(error => {
-                console.error('Error checking authentication:', error)
-            })
+            addToCart(productId)
+        });
     }
 
     function addToCart(productId) {
-        fetch(`/api/carts/${productId}`, { method: 'POST' })
+        fetch(`/api/carts/${productId}`, { method: 'POST', credentials: 'same-origin' })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
@@ -81,13 +36,15 @@
                         showConfirmButton: false,
                         timer: 1500
                     })
+                } else if (data.message === 'Unauthorized') {
+                    redirectToLogin()
                 } else {
                     console.error('Error adding product to cart:', data.message)
                 }
             })
             .catch(error => {
                 console.error('Error adding product to cart:', error)
-            })
+            });
     }
 
     function redirectToLogin() {

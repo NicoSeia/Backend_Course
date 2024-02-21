@@ -24,18 +24,14 @@ router.get('/chat',isUser , chat)
 
 router.get('/products', products)
 
-router.get('/products/details/:pid', isAuthenticated, productsDetails)
+router.get('/products/details/:pid', productsDetails)
 
 router.get('/login', login)
 
 router.get('/register', register)
 
-/* router.get('/protected-route', isAuthenticated, (req, res) => {
-    res.json({ message: 'Protected route' })
-}) */
 /* router.get('/logout', async (req,res) =>{
     res.render('login')
 }) */
-
 
 module.exports = router

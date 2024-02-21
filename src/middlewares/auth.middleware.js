@@ -1,3 +1,4 @@
+const passport = require('passport')
 /**
  * The function `isAuthenticated` checks if a user is authenticated based on the session and returns an
  * unauthorized message if not.

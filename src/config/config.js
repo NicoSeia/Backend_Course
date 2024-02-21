@@ -2,6 +2,7 @@ const dotenv = require('dotenv')
 const { connect } = require('mongoose')
 const { program } = require('./commander')
 
+
 const { mode } = program.opts()
 console.log('mode config: ', mode)
 
@@ -28,7 +29,7 @@ const connectDb = async () => {
 
 
 class MongoSingleton {
-    static instance //
+    static instance 
     constructor() {
       connect(process.env.MONGO_URI)
     }
@@ -45,5 +46,5 @@ class MongoSingleton {
 
 module.exports = {
     configObject,
-    connectDb
+    connectDb,
 }

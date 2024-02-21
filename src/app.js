@@ -1,20 +1,14 @@
 const express = require('express')
-const handlebars = require('express-handlebars')
-const cors = require('cors')
-
-const { connectDb, configObject } = require('./config/config.js')
-
-const mongoStore = require('connect-mongo')
-
 const session = require('express-session')
+const mongoStore = require('connect-mongo')
+const cors = require('cors')
+const { connectDb } = require('./config/config.js')
 const passport = require('passport')
 const { initializePassport } = require('./passport-jwt/passport.config.js')
-
 const appRouter = require('./routes/general.router.js')
-
 const cookie = require('cookie-parser')
 const configureSocketIO = require('./helpers/socketIO.js')
-
+const handlebars = require('express-handlebars')
 const handlebarsHelpers = require('handlebars-helpers')()
 const eq = handlebarsHelpers.eq
 
@@ -28,7 +22,7 @@ app.use(cookie())
 app.use(cors())
 app.use(session({
   store: mongoStore.create({
-    mongoUrl: 'mongodb+srv://nicolasseia0:arCZpn6vklZ6nebR@cluster0.bmytq5v.mongodb.net/ecommerce?retryWrites=true&w=majority', 
+    mongoUrl: process.env.MONGO_URI, 
     mongoOptions: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -39,13 +33,13 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }))
-
 app.use(appRouter)
 
-initializePassport()
-app.use(session({
+/* app.use(session({
   secret: 'secret'
-}))
+})) */
+
+initializePassport()
 app.use(passport.initialize())
 //app.use(passport.session())
 
@@ -60,17 +54,13 @@ app.engine('hbs', handlebars.engine({
 app.set('view engine', 'hbs')
 app.set('views', __dirname + '/views')
 
+//connection to data base
+connectDb()
 
 const serverHttp = app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
 })
 
-//connection to data base
-connectDb()
-
 const io = configureSocketIO(serverHttp)
-module.exports = io
 
-
-
-module.exports = app;
+module.exports = { app, io }

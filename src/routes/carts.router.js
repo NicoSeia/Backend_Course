@@ -1,7 +1,6 @@
 const { Router } = require('express')
-
 const CartController = require('../controllers/carts.controller')
-const { authenticateUser } = require('../middlewares/auth.middleware')
+const { authenticateUser, isAuthenticated } = require('../middlewares/auth.middleware')
 
 const router = Router()
 const {
@@ -12,7 +11,8 @@ const {
     removeProductFromCart,
     updateCart,
     updateProductQuantity,
-    deleteAllProducts
+    deleteAllProducts,
+    addProductToCart2
 } = new CartController()
 
 router
@@ -24,7 +24,7 @@ router
     .put('/:cid', updateCart)
     .put('/:cid/products/:pid', updateProductQuantity)
     .delete('/:cid', deleteAllProducts)
-    .post('/:pid', authenticateUser, addProductToCart)
+    .post('/:pid', isAuthenticated, addProductToCart2)
 
 
 

@@ -23,7 +23,7 @@ router.post('/login', login)
 
 router.get('/logout', logout)
 
-router.get('/current', [passportCall('jwt'), authorization(['ADMIN'])], current)
+router.get('/current', [passportCall('jwt'), authorization(['ADMIN', 'PUBLIC'])], current)
 
 router.get('/github', passport.authenticate('github', {scope: ['user:email']}), github)
 
