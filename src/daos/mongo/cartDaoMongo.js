@@ -1,4 +1,4 @@
-const { cartModel } = require("./models/cart.model");
+const { cartModel } = require("./models/cart.model")
 
 class cartDaoMongo {
     constructor(){
@@ -21,10 +21,10 @@ class cartDaoMongo {
     }
 
     async getById(cid) {
-        const cart = await this.model.findOne({ _id: cid })
+        const cart = await this.model.findOne({ _id: cid }).lean()
 
         if (cart) {
-            return { cart: cart.toObject() }
+            return cart.products
         } else {
             console.log("This cart does not exist")
             return { cart: { products: [] } }
@@ -121,9 +121,9 @@ class cartDaoMongo {
             return { success: false, message: 'Cart not found' }
         }
     
-        cart.products = [];
+        cart.products = []
     
-        await cart.save();
+        await cart.save()
     
         return { success: true, message: 'All products deleted from the cart' }
     }

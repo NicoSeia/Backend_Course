@@ -1,9 +1,13 @@
 const mongoose = require('mongoose')
-const { cartService } = require('../repositories/service')
+const { cartService, userService, productService } = require('../repositories/service')
+const { ticketModel } = require('../daos/mongo/models/ticket.model')
 
 class CartController {
     constructor(){
         this.cartService = cartService
+        this.userService = userService
+        this.productService = productService
+        this.ticketModel = ticketModel
     }
 
     getCarts = async (req,res)=>{
@@ -162,10 +166,18 @@ class CartController {
     addProductToCart2 = async (req, res) => {
         try {
             const { pid } = req.params
-
-            const cartId = '65d3cd1ce580263984c61a76'
-
-            await this.cartService.addProductToCart(cartId, pid)
+            const user = req.session.user
+            /* console.log('///////////////', user) */
+            if (!user || !user.cart) {
+                return res.status(404).json({
+                    status: 'error',
+                    message: 'User not found or user does not have a cart',
+                })
+            }
+            const cId = user.cart
+            
+            console.log(cId)
+            await this.cartService.addProductToCart(cId, pid)
 
             res.json({
                 status: 'success',
@@ -177,6 +189,81 @@ class CartController {
                 status: 'error',
                 message: 'Server error',
             })
+        }
+    }
+
+    purchaseCart = async (req, res) => {
+        try {
+            const { cid } = req.params
+            
+            const cart = await this.cartService.getCartById(cid)
+            if (!cart) {
+                return res.status(404).json({ status: 'error', message: 'Cart not found' })
+            }
+            const productUpdates = []
+            const productsNotPurchased = []
+            let totalAmount = 0
+            for (const item of cart) {
+                const productId = item.product.toString()
+                const productArray = await this.productService.getProductById(productId)
+                const product = productArray[0]
+                const productPrice = product.price
+                if (!product) {
+                    return res.status(404).json({ status: 'error', message: 'Product not found' })
+                }
+                if (product.stock < item.quantity) {
+                    productsNotPurchased.push(item.product)
+                    continue
+                    //return res.status(400).json({ status: 'error', message: `Not enough stock for product ${product._id}` })
+                }
+                product.stock -= item.quantity
+                console.log(product)
+                productUpdates.push(this.productService.updateProduct(productId,
+                    product.title, 
+                    product.description, 
+                    product.price, 
+                    product.thumbnail, 
+                    product.code, 
+                    product.stock, 
+                    product.status, 
+                    product.category
+                ))
+
+                const quantity = item.quantity
+                //console.log("Product Price:", productPrice)
+                //console.log("Quantity:", quantity)
+                totalAmount += (quantity * productPrice)
+            }
+
+            console.log(totalAmount)
+            const userEmail = req.session.user.email
+            //console.log(userEmail)
+            const ticketData = {
+                code: 'TICKET-' + Date.now().toString(36).toUpperCase(),
+                purchase_datetime: new Date(),
+                amount: totalAmount,
+                purchaser: userEmail
+            }
+    
+            const ticket = new this.ticketModel(ticketData)
+            await ticket.save()
+
+            if (productsNotPurchased.length > 0) {
+                cart.products = cart.products.filter(item => !productsNotPurchased.includes(item.product))
+                await cart.save()
+            } else {
+                await this.cartService.deleteAllProducts(cid)
+                console.log('----------Cart empty----------')
+            }
+            try {
+                await Promise.all(productUpdates)
+                return res.status(200).json({ status: 'success', message: 'Stock updated successfully' })
+            } catch (error) {
+                return res.status(500).json({ status: 'error', message: 'Failed to update stock' })
+            }
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({ status: 'error', message: 'Server error' })
         }
     }
 

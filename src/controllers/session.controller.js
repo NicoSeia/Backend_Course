@@ -1,14 +1,10 @@
 const { createHash, isValidPassword } = require('../utils/hashPassword')
 const { generateToken } = require('../utils/createToken')
 const { cartService, userService } = require('../repositories/service')
-const userDaoMongo = require('../daos/mongo/userDaoMongo')
-const cartDaoMongo = require('../daos/mongo/cartDaoMongo')
 
 
 class SessionController {
     constructor(){
-        /* this.userService = new userDaoMongo()
-        this.cartService = new cartDaoMongo() */
         this.cartService = cartService
         this.userService = userService
     }
@@ -40,12 +36,25 @@ class SessionController {
                 cart: cart._id,
                 role,
             }
-            console.log('======================', newUser)
+            /* console.log('======================', newUser) */
     
             const result = await this.userService.createUser(newUser)
+
+            req.session.user = {
+                id: result._id,
+                first_name: result.first_name,
+                last_name: result.last_name,
+                email: result.email,
+                cart: result.cart,
+                role: result.role
+            }
     
             const token = generateToken({
                 id: result._id,
+                first_name: result.first_name,
+                last_name: result.last_name,
+                email: result.email,
+                cart: result.cart,
                 role: result.role
             })
     
@@ -111,11 +120,19 @@ class SessionController {
     
                 req.session.user = {
                     user: user._id,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    email: user.email,
+                    cart: user.cart,
                     role: user.role
                 }
     
                 const token = generateToken({
                     id: user._id,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    email: user.email,
+                    cart: user.cart,
                     role: user.role
                 })
     

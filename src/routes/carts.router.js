@@ -12,7 +12,8 @@ const {
     updateCart,
     updateProductQuantity,
     deleteAllProducts,
-    addProductToCart2
+    addProductToCart2,
+    purchaseCart,
 } = new CartController()
 
 router
@@ -25,7 +26,7 @@ router
     .put('/:cid/products/:pid', updateProductQuantity)
     .delete('/:cid', deleteAllProducts)
     .post('/:pid', isAuthenticated, addProductToCart2)
-
+    .post('/:cid/purchase', isAuthenticated, purchaseCart)
 
 
 module.exports = router

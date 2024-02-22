@@ -13,7 +13,8 @@ const {
     products,
     productsDetails,
     login,
-    register
+    register,
+    shoppingCart
 } = new ViewsController()
 
 router.get('/', home)
@@ -29,6 +30,8 @@ router.get('/products/details/:pid', productsDetails)
 router.get('/login', login)
 
 router.get('/register', register)
+
+router.get('/cart', isAuthenticated, shoppingCart)
 
 /* router.get('/logout', async (req,res) =>{
     res.render('login')

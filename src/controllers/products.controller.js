@@ -65,7 +65,6 @@ class ProdcutsController {
     updateProduct = async (req,res)=>{
         try{
             const pid = req.params.pid
-            
             const {title, description, price, thumbnail, code, stock, status, category} = req.body
             await this.productService.updateProduct(pid, title, description, price, thumbnail, code, stock, status, category)
             res.json({
@@ -73,7 +72,7 @@ class ProdcutsController {
                 message: 'Product updated successfully',
             })
         }catch(error){
-            console.log(error);
+            console.log(error)
             res.status(500).send('server error')
         }
     }
