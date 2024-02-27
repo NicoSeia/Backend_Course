@@ -23,7 +23,7 @@ router
     .post('/:cid/product/:pid', addProductToCart)
     .delete('/:cid/product/:pid', removeProductFromCart)
     .put('/:cid', updateCart)
-    .put('/:cid/products/:pid', updateProductQuantity)
+    .put('/:cid/product/:pid', updateProductQuantity)
     .delete('/:cid', deleteAllProducts)
     .post('/:pid', isAuthenticated, addProductToCart2)
     .post('/:cid/purchase', isAuthenticated, purchaseCart)

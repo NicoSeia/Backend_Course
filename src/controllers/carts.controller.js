@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
 const { cartService, userService, productService } = require('../repositories/service')
 const { ticketModel } = require('../daos/mongo/models/ticket.model')
+const customError = require('../services/errors/customError')
+const { generateCartErrorInfo, generateCartRemoveErrorInfo } = require('../services/errors/generateErrorInfo')
+const { EErrors } = require('../services/errors/enum')
 
 class CartController {
     constructor(){
@@ -72,9 +75,17 @@ class CartController {
         }
     }
 
-    removeProductFromCart = async (req,res) =>{
+    removeProductFromCart = async (req,res,next) =>{
         try {
             const { cid, pid } = req.params
+            if(!cid || !pid){
+                customError.createError({
+                    name: 'Error to remove product from cart',
+                    cause: generateCartRemoveErrorInfo(cid, pid),
+                    message: 'Cant remove product from cart',
+                    code: EErrors.DATABASE_ERROR,
+                })
+            }
             const result = await this.cartService.removeProductFromCart(cid, pid)
       
             if (result.success) {
@@ -89,8 +100,8 @@ class CartController {
               })
             }
         } catch (error) {
-            console.error(error)
-            res.status(500).send('Server error')
+            next(error)
+            //res.status(500).send('Server error')
         }
     }
 
@@ -163,18 +174,24 @@ class CartController {
         }
     }
 
-    addProductToCart2 = async (req, res) => {
+    addProductToCart2 = async (req, res,next) => {
         try {
             const { pid } = req.params
             const user = req.session.user
             /* console.log('///////////////', user) */
+            const cId = user.cart
             if (!user || !user.cart) {
-                return res.status(404).json({
+                customError.createError({
+                    name: 'Add product to cart error',
+                    cause: generateCartErrorInfo(user, cId),
+                    message: 'Error trying add product to cart',
+                    code: EErrors.DATABASE_ERROR
+                })
+                /* return res.status(404).json({
                     status: 'error',
                     message: 'User not found or user does not have a cart',
-                })
+                }) */
             }
-            const cId = user.cart
             
             console.log(cId)
             await this.cartService.addProductToCart(cId, pid)
@@ -184,11 +201,11 @@ class CartController {
                 message: 'Product added to cart successfully',
             })
         } catch (error) {
-            console.error(error)
-            res.status(500).json({
+            next(error)
+            /* res.status(500).json({
                 status: 'error',
                 message: 'Server error',
-            })
+            }) */
         }
     }
 

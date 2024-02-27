@@ -1,4 +1,7 @@
 const { productService } = require('../repositories/service')
+const customError = require('../services/errors/customError')
+const { EErrors } = require('../services/errors/enum')
+const { generateProductErrorInfo } = require('../services/errors/generateErrorInfo')
 
 class ProdcutsController {
     constructor(){
@@ -11,33 +14,37 @@ class ProdcutsController {
             return res.json({
                 status: 'succes',
                 payload: products
-            });
+            })
         }catch (error){
-            console.error(error);
-            res.status(500).send('Server error')
-        }
-    }
-
-    getProductById = async (req,res)=>{
-        try{
-            const pid = req.params.pid
-            const filteredProduct = await this.productService.getProductById(pid)
-            if(filteredProduct){
-                res.json({
-                    status: 'succes',
-                    payload: filteredProduct
-                })
-            }
-            else{
-                res.status(404).send("Product not exist")
-            }
-        }catch(error) {
             console.error(error)
             res.status(500).send('Server error')
         }
     }
 
-    addProduct = async (req,res)=>{
+    getProductById = async (req,res,next)=>{
+        try{
+            const pid = req.params.pid
+            if(!pid){
+                customError.createError({
+                    name: 'Not found a product',
+                    cause: generateProductErrorInfo(filteredProduct),
+                    message: 'Error, trying to found a product',
+                    code: EErrors.DATABASE_ERROR,
+                })
+                //res.status(404).send("Product not exist")
+            }
+            const filteredProduct = await this.productService.getProductById(pid)
+            res.json({
+                status: 'succes',
+                payload: filteredProduct
+            })    
+        }catch(error) {
+            next(error)
+                //res.status(500).send('Server error')
+        }
+    }
+
+    addProduct = async (req,res,next)=>{
         try {
             const {
               title,
@@ -49,31 +56,66 @@ class ProdcutsController {
               status,
               category,
             } = req.body
-        
+            
+            if(!title || !price || !code || !stock){
+                customError.createError({
+                    name: 'Product creation error',
+                    cause: generateProductErrorInfo({
+                        title,
+                        description,
+                        price,
+                        thumbnail,
+                        code,
+                        stock,
+                        status,
+                        category,
+                    }),
+                    message: 'Error trying to add a product',
+                    code: EErrors.DATABASE_ERROR
+                })
+            }
+
             await this.productService.addProduct(title, description, price, thumbnail, code, stock, status, category)
         
-              res.json({
+            res.json({
                 status: 'success',
                 message: 'Product added successfully',
-              });
+            })
             } catch (error) {
-              console.error(error);
-              res.status(500).send('Server error');
+              next(error)
+              //res.status(500).send('Server error')
         }
     }
 
-    updateProduct = async (req,res)=>{
+    updateProduct = async (req,res,next)=>{
         try{
             const pid = req.params.pid
             const {title, description, price, thumbnail, code, stock, status, category} = req.body
+            if(!title || !price || !code || !stock){
+                customError.createError({
+                    name: 'Product to update error',
+                    cause: generateProductErrorInfo({
+                        title,
+                        description,
+                        price,
+                        thumbnail,
+                        code,
+                        stock,
+                        status,
+                        category,
+                    }),
+                    message: 'Error trying to update a product',
+                    code: EErrors.DATABASE_ERROR
+                })
+            }
             await this.productService.updateProduct(pid, title, description, price, thumbnail, code, stock, status, category)
             res.json({
                 status: 'success',
                 message: 'Product updated successfully',
             })
         }catch(error){
-            console.log(error)
-            res.status(500).send('server error')
+            next(error)
+            //res.status(500).send('server error')
         }
     }
 
@@ -86,7 +128,7 @@ class ProdcutsController {
                 return res.json({
                     status: 'success',
                     message: 'Product deleted successfully'
-                });
+                })
             } else {
                 return res.status(404).json({
                     status: 'error',
