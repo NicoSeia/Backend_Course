@@ -1,7 +1,8 @@
-const { EErrors } = require("../../services/errors/enum")
+const { EErrors } = require("../../services/errors/enum");
+const { logger } = require("../../utils/logger");
 
 exports.handleError = ( err, req, res, next ) => {
-    console.log(err)
+    logger.error(err)
     switch (err.code) {
         case EErrors.DATABASE_ERROR:
             return res.send({status: 'error', error: err.message})

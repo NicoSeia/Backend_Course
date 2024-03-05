@@ -1,4 +1,5 @@
 const { messageService } = require('../repositories/service')
+const { logger } = require('../utils/logger')
 
 class messageController {
     constructor(){
@@ -9,7 +10,7 @@ class messageController {
         try {
             return await this.messageService.getAllMessages()
         } catch (error) {
-            console.error('Error getting messages:', error)
+            logger.error('Error getting messages:', error)
             throw error
         }
     }
@@ -18,7 +19,7 @@ class messageController {
         try {
             return await this.messageService.getMessagesByUser(user)
         } catch (error) {
-            console.error('Error getting messages by user:', error)
+            logger.error('Error getting messages by user:', error)
             throw error
         }
     }
@@ -27,7 +28,7 @@ class messageController {
         try {
             return await this.messageService.addMessageToUser(user, message)
         } catch (error) {
-            console.error('Error adding message to user:', error)
+            logger.error('Error adding message to user:', error)
             throw error
         }
     }
@@ -36,7 +37,7 @@ class messageController {
         try {
             return await this.messageService.createUserWithMessage(user, message)
         } catch (error) {
-            console.error('Error creating user with message:', error)
+            logger.error('Error creating user with message:', error)
             throw error
         }
     }

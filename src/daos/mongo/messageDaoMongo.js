@@ -1,3 +1,4 @@
+const { logger } = require('../../utils/logger')
 const { messageModel } = require('./models/message.model')
 
 class messageDaoMongo {
@@ -17,14 +18,14 @@ class messageDaoMongo {
         try {
             const userDocument = await this.model.findOne({ user: user })
             if (!userDocument) {
-                console.error(`User ${user} not found`)
+                logger.error(`User ${user} not found`)
                 return null
             }
             userDocument.messages.push(message)
             await userDocument.save()
             return userDocument
         } catch (error) {
-            console.error('Error adding message to user:', error)
+            logger.error('Error adding message to user:', error)
             throw error
         }
     }
@@ -38,7 +39,7 @@ class messageDaoMongo {
             await newUserDocument.save()
             return newUserDocument
         } catch (error) {
-            console.error('Error creating user with message:', error)
+            logger.error('Error creating user with message:', error)
             throw error
         }
     }

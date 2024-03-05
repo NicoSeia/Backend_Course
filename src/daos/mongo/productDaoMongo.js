@@ -1,3 +1,4 @@
+const { logger } = require("../../utils/logger")
 const { productModel } = require("./models/product.model")
 
 class productDaoMongo {
@@ -10,10 +11,10 @@ class productDaoMongo {
         const existingProduct = await this.model.findOne({ code })
 
         if (existingProduct) {
-            console.log("This product has already been added")
+            logger.info("This product has already been added")
         } else {
             if (!title || !description || !price || !code || !stock) {
-              console.log("Incorrect product: One of these properties is not valid")
+              logger.error("Incorrect product: One of these properties is not valid")
             }else{
                 const lastProduct = await this.model.findOne({}, {}, { sort: { 'id': -1 } })
                 const newProduct = new this.model({
@@ -65,7 +66,7 @@ class productDaoMongo {
         if (product) {
             return [product]
         } else {
-            console.log("This product does not exist")
+            logger.error("This product does not exist")
             return []
         }
     }
@@ -89,9 +90,9 @@ class productDaoMongo {
         )
     
         if (updatedProduct) {
-            console.log("Product updated successfully")
+            logger.info("Product updated successfully")
         } else {
-            console.log("The product to be updated was not found")
+            logger.error("The product to be updated was not found")
         }
     }
 
@@ -102,9 +103,9 @@ class productDaoMongo {
 
             await product.save()
     
-            console.log("Product deactivated successfully")
+            logger.info("Product deactivated successfully")
         } else {
-            console.log("No such product exists")
+            logger.error("No such product exists")
         }
     }
 

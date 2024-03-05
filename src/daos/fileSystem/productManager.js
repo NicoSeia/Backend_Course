@@ -1,4 +1,6 @@
 const fs = require('fs');
+const { logger } = require('../../utils/logger');
+const { error } = require('console');
 
 class ProductManager {
     constructor() {
@@ -37,11 +39,11 @@ class ProductManager {
         id++;
 
         if(this.products.find(product => product.code === code)){
-            console.log("This product has already been added");
+            logger.info("This product has already been added");
         }
         else{
             if(!title || !description || !price || !code || !stock){
-                console.log("Incorrect product: One of these properties is not valid");
+                logger.info("Incorrect product: One of these properties is not valid");
             }
             else{
                 this.products.push({id: id, title, description, price, thumbnail, code, stock, status, category});
@@ -58,7 +60,7 @@ class ProductManager {
     async getLimitedProducts(limit) {
 
         if (parseInt(limit) <= 0) {
-            console.log("Invalid limit");
+            logger.error("Invalid limit");
             return [];
         } else {
             return this.products.slice(0, parseInt(limit));
@@ -72,7 +74,7 @@ class ProductManager {
             return filteredProduct;
         }
         else{
-            console.log("This product does not exist");
+            logger.error("This product does not exist");
             return [];
         }
         
@@ -97,7 +99,7 @@ class ProductManager {
         await this.writeProductsToFile();
         }
         else{
-            console.log("The product to be updated was not found")
+            logger.error("The product to be updated was not found")
         }
     }
 
@@ -107,7 +109,7 @@ class ProductManager {
             this.products.splice(indexToDelete, 1);
             await this.writeProductsToFile();
         }else{
-            console.log('No such product exists')
+            logger.error('No such product exists')
         }
     }
 }

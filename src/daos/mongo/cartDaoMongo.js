@@ -1,3 +1,4 @@
+const { logger } = require("../../utils/logger");
 const { cartModel } = require("./models/cart.model")
 
 class cartDaoMongo {
@@ -26,7 +27,7 @@ class cartDaoMongo {
         if (cart) {
             return cart.products
         } else {
-            console.log("This cart does not exist")
+            logger.error("This cart does not exist")
             return { cart: { products: [] } }
         }
     }
@@ -54,7 +55,7 @@ class cartDaoMongo {
 
         await cart.save()
 
-        console.log("Product added to cart successfully")
+        logger.info("Product added to cart successfully")
         return {
             success: true,
             message: 'Product added to cart successfully',

@@ -1,10 +1,11 @@
 const dotenv = require('dotenv')
 const { connect } = require('mongoose')
 const { program } = require('./commander')
+const { logger } = require('../utils/logger')
 
 
 const { mode } = program.opts()
-console.log('mode config: ', mode)
+//logger.info('mode config: ', mode)
 
 dotenv.config({
     path: mode === 'production' ? './.env.production' : './.env.development' 
@@ -23,9 +24,9 @@ const connectDb = async () => {
     try {
         /* await connect(process.env.MONGO_URI) */
         MongoSingleton.getInstance()
-        console.log("Db connected")
+        logger.info("Db connected")
     } catch(err) {
-        console.log(err)
+        logger.error(err)
     }
 }
 
@@ -38,10 +39,10 @@ class MongoSingleton {
   
     static getInstance() {
       if(!this.instance){
-        console.log('Connecting to data base')
+        logger.info('Connecting to data base')
         return this.instance = new MongoSingleton()
       }
-      console.log('Data base already connected')
+      logger.info('Data base already connected')
       return this.instance
     }
   }

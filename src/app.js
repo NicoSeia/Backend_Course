@@ -9,6 +9,7 @@ const appRouter = require('./routes/general.router.js')
 const cookie = require('cookie-parser')
 const configureSocketIO = require('./helpers/socketIO.js')
 const handlebars = require('express-handlebars')
+const { logger, addLogger } = require('./utils/logger.js')
 const handlebarsHelpers = require('handlebars-helpers')()
 const eq = handlebarsHelpers.eq
 
@@ -33,6 +34,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }))
+app.use(addLogger)
 app.use(appRouter)
 
 /* app.use(session({
@@ -58,7 +60,7 @@ app.set('views', __dirname + '/views')
 connectDb()
 
 const serverHttp = app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`)
+  logger.info(`Example app listening on port ${PORT}`)
 })
 
 const io = configureSocketIO(serverHttp)

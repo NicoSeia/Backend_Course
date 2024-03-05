@@ -2,6 +2,7 @@ const { productService } = require('../repositories/service')
 const customError = require('../services/errors/customError')
 const { EErrors } = require('../services/errors/enum')
 const { generateProductErrorInfo } = require('../services/errors/generateErrorInfo')
+const { logger } = require('../utils/logger')
 
 class ProdcutsController {
     constructor(){
@@ -135,7 +136,7 @@ class ProdcutsController {
                     message: 'Product not found'
             })}
         }catch(error){
-            console.log(error);
+            logger.error(error)
             res.status(500).send('server error')
         }
     }

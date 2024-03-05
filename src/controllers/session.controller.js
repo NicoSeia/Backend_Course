@@ -1,6 +1,7 @@
 const { createHash, isValidPassword } = require('../utils/hashPassword')
 const { generateToken } = require('../utils/createToken')
 const { cartService, userService } = require('../repositories/service')
+const { logger } = require('../utils/logger')
 
 
 class SessionController {
@@ -20,7 +21,7 @@ class SessionController {
         try {
             const existingUser = await this.userService.getUserBy({email})
     
-            console.log(existingUser)
+            logger.info(existingUser)
             if (existingUser) {
                 return res.send({ status: 'error', error: 'This user already exists' })
             }
@@ -72,7 +73,7 @@ class SessionController {
                 }
             })
         } catch (error) {
-            console.error('Error during user registration:', error)
+            logger.error('Error during user registration:', error)
             res.status(500).send({ status: 'error', error: 'Internal Server Error' })
         }
     }
@@ -90,7 +91,6 @@ class SessionController {
             if(user.email === 'adminCoder@coder.com' && password === user.password){
     
                 await this.userService.updateRole(user._id, 'admin')
-                console.log('-----------')
                 req.session.user = {
                     id: user._id,
                     first_name: user.first_name,
@@ -143,7 +143,7 @@ class SessionController {
             }
     
         } catch(error) {
-            console.error('Error during user login:', error)
+            logger.error('Error during user login:', error)
             res.status(500).send({ status: 'error', error: 'Internal Server Error' })
         }
     }
@@ -152,14 +152,14 @@ class SessionController {
         try{
             req.session.destroy((err) =>{
                 if(err){
-                    console.error('Error during session destruction:', err)
+                    logger.error('Error during session destruction:', err)
                     return res.status(500).send({ status: 'error', error: 'Internal Server Error' })
                 }
     
                 res.redirect('/login')
             })
         }catch(error) {
-            console.error('Error during logout:', error)
+            logger.error('Error during logout:', error)
             res.status(500).send({ status: 'error', error: 'Internal Server Error' })
         }
     }

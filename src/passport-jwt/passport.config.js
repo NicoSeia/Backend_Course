@@ -1,5 +1,6 @@
 const passport = require('passport')
 const passport_jwt = require('passport-jwt')
+const { logger } = require('../utils/logger')
 
 const JWTStrategy = passport_jwt.Strategy
 const extract_jwt = passport_jwt.ExtractJwt
@@ -21,7 +22,7 @@ const initializePassport = () => {
         secretOrKey: 'palabrasecretaparaeltoken'
     }, async (jwt_payload, done)=>{
         try {
-            console.log('jwt_payload passport config: ', jwt_payload)
+            logger.info('jwt_payload passport config: ', jwt_payload)
             return done(null, jwt_payload)            
         } catch (error) {
             return done(error)

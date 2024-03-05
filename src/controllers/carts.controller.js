@@ -4,6 +4,7 @@ const { ticketModel } = require('../daos/mongo/models/ticket.model')
 const customError = require('../services/errors/customError')
 const { generateCartErrorInfo, generateCartRemoveErrorInfo } = require('../services/errors/generateErrorInfo')
 const { EErrors } = require('../services/errors/enum')
+const { logger } = require('../utils/logger')
 
 class CartController {
     constructor(){
@@ -21,7 +22,7 @@ class CartController {
                 payload: allCarts
             })
         }catch(error){
-            console.log(error)
+            logger.error(error)
             res.status(500).send('Server error')
         }
     }
@@ -34,7 +35,7 @@ class CartController {
                 payload: newCart
             })
         }catch(error){
-            console.log(error)
+            logger.error(error)
             res.status(500).send('Server error')
         }
     }
@@ -53,7 +54,7 @@ class CartController {
                 res.status(404).send("Product not exist");
             }
         }catch(error){
-            console.log(error)
+            logger.error(error)
             res.status(500).send('Server error')
         }
     }
@@ -70,7 +71,7 @@ class CartController {
             })
             
         }catch(error){
-            console.log(error)
+            logger.error(error)
             res.status(500).send('Server error')
         }
     }
@@ -123,7 +124,7 @@ class CartController {
                 })
             }
         } catch (error) {
-            console.error(error)
+            logger.error(error)
             res.status(500).send('Server error')
         }
     }
@@ -147,7 +148,7 @@ class CartController {
                 })
             }
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             res.status(500).send('Server error')
         }
     }
@@ -169,7 +170,7 @@ class CartController {
                 })
             }
         } catch (error) {
-            console.error(error)
+            logger.error(error)
             res.status(500).send('Server error')
         }
     }
@@ -178,7 +179,6 @@ class CartController {
         try {
             const { pid } = req.params
             const user = req.session.user
-            /* console.log('///////////////', user) */
             const cId = user.cart
             if (!user || !user.cart) {
                 customError.createError({
@@ -193,7 +193,7 @@ class CartController {
                 }) */
             }
             
-            console.log(cId)
+            logger.info(cId)
             await this.cartService.addProductToCart(cId, pid)
 
             res.json({
@@ -234,7 +234,7 @@ class CartController {
                     //return res.status(400).json({ status: 'error', message: `Not enough stock for product ${product._id}` })
                 }
                 product.stock -= item.quantity
-                console.log(product)
+                logger.info(product)
                 productUpdates.push(this.productService.updateProduct(productId,
                     product.title, 
                     product.description, 
@@ -252,7 +252,7 @@ class CartController {
                 totalAmount += (quantity * productPrice)
             }
 
-            console.log(totalAmount)
+            logger.info(totalAmount)
             const userEmail = req.session.user.email
             //console.log(userEmail)
             const ticketData = {
@@ -270,7 +270,7 @@ class CartController {
                 await cart.save()
             } else {
                 await this.cartService.deleteAllProducts(cid)
-                console.log('----------Cart empty----------')
+                logger.info('----------Cart empty----------')
             }
             try {
                 await Promise.all(productUpdates)
@@ -279,7 +279,7 @@ class CartController {
                 return res.status(500).json({ status: 'error', message: 'Failed to update stock' })
             }
         } catch (error) {
-            console.error(error)
+            logger.error(error)
             res.status(500).json({ status: 'error', message: 'Server error' })
         }
     }

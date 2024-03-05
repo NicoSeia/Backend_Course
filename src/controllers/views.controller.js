@@ -1,6 +1,7 @@
 const productDaoMongo = require('../daos/mongo/productDaoMongo')
 const userDaoMongo = require('../daos/mongo/userDaoMongo')
 const { productService, userService, cartService } = require('../repositories/service')
+const { logger } = require('../utils/logger')
 
 
 
@@ -30,7 +31,7 @@ class ViewsController {
                 page
             })
         }catch(err){
-            console.log(err)
+            logger.error(err)
             res.status(500).send({message:'Server error'})
         }
     }
@@ -54,7 +55,7 @@ class ViewsController {
                 page
             })
         }catch(err){
-            console.log(err)
+            logger.error(err)
             res.status(500).send({message:'Server error'})
         }
     }
@@ -68,7 +69,7 @@ class ViewsController {
             user,
             })
         }catch(err){
-            console.log(err)
+            logger.error(err)
             res.status(500).send({message:'Server error'})
         }
     }
@@ -78,7 +79,7 @@ class ViewsController {
             const { limit, pageNumber, sort, query } = req.query
             const parsedLimit = limit ? parseInt(limit, 10) : 10
             const userId = req.session && req.session.user ? req.session.user.user : null
-            console.log(userId)
+            logger.info(userId)
             const user = await this.userViewService.getUserBy({ _id: userId })
             //console.log('User data:', user)
             const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await this.productViewService.getProducts({ limit: parsedLimit, pageNumber, sort, query })
@@ -94,7 +95,7 @@ class ViewsController {
                 page
             })
         }catch(err){
-            console.log(err)
+            logger.error(err)
             res.status(500).send({message:'Server error'})
         }
     }
@@ -115,7 +116,7 @@ class ViewsController {
                 res.status(404).send("Product not exist")
             }
         }catch(error){
-            console.log(error)
+            logger.error(error)
             res.status(500).send('Server error')
         }
     }
@@ -163,7 +164,7 @@ class ViewsController {
             })
         }
         catch(err){
-            console.log(err)
+            logger.error(err)
             res.status(500).send('Server error')
         }
     }

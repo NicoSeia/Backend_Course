@@ -1,3 +1,5 @@
+const { logger } = require("../../utils/logger")
+
 const socket = io()
 
 const chatBox = document.getElementById('chatBox')
@@ -13,7 +15,7 @@ Swal.fire({
     }
 }).then(result => {
     user = result.value
-    console.log(user)
+    logger.info(user)
 })
 
 chatBox.addEventListener('keyup', evt => {
@@ -26,7 +28,7 @@ chatBox.addEventListener('keyup', evt => {
 })
 
 socket.on('messageLogs', (data) => {
-    console.log(`${data.user}: ${data.message}`)
+    logger.info(`${data.user}: ${data.message}`)
     if (data && data.message) {
         const messageLogs = document.getElementById('messageLogs')
         messageLogs.innerHTML += `<p>${data.user}: ${data.message.message}</p>`

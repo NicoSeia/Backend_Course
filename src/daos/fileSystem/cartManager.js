@@ -1,40 +1,41 @@
-const fs = require('fs');
+const fs = require('fs')
+const { logger } = require('../../utils/logger')
 
 class CartManager {
     constructor() {
-        this.path = "./mockDB/cart.json";
-        this.cart = [];
-        this.loadCart();
+        this.path = "./mockDB/cart.json"
+        this.cart = []
+        this.loadCart()
     }
 
     async loadCart() {
         try {
-          const cartInJson = await fs.promises.readFile(this.path, "utf-8");
-          this.cart = JSON.parse(cartInJson);
+          const cartInJson = await fs.promises.readFile(this.path, "utf-8")
+          this.cart = JSON.parse(cartInJson)
         } catch (error) {
-          console.error("Error loading cart:", error);
+          logger.error("Error loading cart:", error)
         }
     }
 
     async writeCartToFile() {
         try {
-          const cartJson = JSON.stringify(this.cart, null, 2);
-          await fs.promises.writeFile(this.path, cartJson);
+          const cartJson = JSON.stringify(this.cart, null, 2)
+          await fs.promises.writeFile(this.path, cartJson)
         } catch (error) {
-          console.error("Error writing cart to file:", error);
+          logger.error("Error writing cart to file:", error)
         }
     }
 
     async createCart() {
         try{
-            let id = 0;
+            let id = 0
             for (let i = 0; i < this.cart.length; i++) {
-                const element = this.cart[i];
+                const element = this.cart[i]
                 if(element.id > id){
-                    id = element.id;
+                    id = element.id
                 }
             }
-            id++;
+            id++
 
             const newCart = {
                 id: id,
@@ -42,10 +43,10 @@ class CartManager {
             }
             this.cart.push(newCart)
             await this.writeCartToFile()
-            return newCart;
+            return newCart
 
         } catch(error){
-            console.error(error)
+            logger.error(error)
             throw new Error("Error creating cart")
         }
     }
@@ -55,30 +56,30 @@ class CartManager {
     }
 
     async getCartById(id) {
-        const index = this.cart.findIndex((cart) => cart.id === parseInt(id));
-        const cart = this.cart[index];
+        const index = this.cart.findIndex((cart) => cart.id === parseInt(id))
+        const cart = this.cart[index]
     
         if (index !== -1) {
-          return { cart }; 
+          return { cart }
         } else {
-          console.log("This cart does not exist");
-          return { cart: { products: [] } }; 
+          logger.info("This cart does not exist")
+          return { cart: { products: [] } }
         }
     }
 
     async addProductToCart(cartId, productId) {
         try {
-          const { index, cart } = await this.getCartById(cartId);
+          const { index, cart } = await this.getCartById(cartId)
     
           if (index === -1) {
-            console.log("Cart not found");
-            return;
+            logger.info("Cart not found")
+            return
           }
     
-          const existingProductIndex = cart.products.findIndex((item) => item.product === parseInt(productId));
+          const existingProductIndex = cart.products.findIndex((item) => item.product === parseInt(productId))
     
           if (existingProductIndex !== -1) {
-            cart.products[existingProductIndex].quantity += 1;
+            cart.products[existingProductIndex].quantity += 1
           } else {
             cart.products.push({
               product: productId,
@@ -86,13 +87,13 @@ class CartManager {
             });
           }
     
-          await this.writeCartToFile();
+          await this.writeCartToFile()
     
-          console.log("Product added to cart successfully");
+          logger.info("Product added to cart successfully")
         } catch (error) {
-          console.error(error);
+          logger.error(error)
         }
       }
 }
 
-module.exports = CartManager;
+module.exports = CartManager

@@ -1,3 +1,4 @@
+const { logger } = require("../../utils/logger")
 const { userModel } = require("./models/user.model")
 
 class userDaoMongo {
@@ -25,7 +26,7 @@ class userDaoMongo {
         try{
             return await this.userModel.findByIdAndUpdate(userId, { role: newRole }, { new: true })
         }catch (err){
-            console.error('Error updating user role:', err)
+            logger.error('Error updating user role:', err)
         }
     }
 

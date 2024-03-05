@@ -7,7 +7,7 @@ let MessageDao
 let ProductFile
 let CartFile
 
-console.log("Persistnece factory: ", configObject.persistence)
+//console.log("Persistnece factory: ", configObject.persistence)
 
 switch (configObject.persistence) {
     case 'MONGO':
@@ -36,7 +36,7 @@ switch (configObject.persistence) {
         break;
 }
 
-console.log('====================================',UserDao)
+//console.log('====================================',UserDao)
 
 module.exports = {
     UserDao,

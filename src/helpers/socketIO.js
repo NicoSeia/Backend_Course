@@ -1,6 +1,7 @@
 const { Server } = require('socket.io')
 const MessageController = require('../controllers/message.controller.js')
 const ProdcutsController = require('../controllers/products.controller.js')
+const { logger } = require('../utils/logger.js')
 
 
 function configureSocketIO(serverHttp) {
@@ -10,7 +11,7 @@ function configureSocketIO(serverHttp) {
     const messageController = new MessageController()
 
     io.on('connection', socket => {
-        console.log('New client connection')
+        logger.info('New client connection')
 
         socket.on('newProduct', async addProduct => {
             await productsController.addProduct(addProduct)
@@ -21,12 +22,12 @@ function configureSocketIO(serverHttp) {
         socket.on('deleteProduct', async deleteProductById => {
             await productsController.deleteProduct(deleteProductById)
             const productsList = await productsController.getProducts()
-            console.log('Products sent:', productsList);
+            logger.info('Products sent:', productsList);
             socket.emit('products', productsList)
         })
 
         socket.on('message', async (data) => {
-            console.log(`${data.user}: ${data.message}`)
+            logger.info(`${data.user}: ${data.message}`)
 
             try {
                 const newMessage = {
@@ -38,7 +39,7 @@ function configureSocketIO(serverHttp) {
 
                 io.emit('messageLogs', { user: data.user, message: newMessage })
             } catch (error) {
-                console.error('Error saving message to database:', error)
+                logger.error('Error saving message to database:', error)
             }
         })
     })
