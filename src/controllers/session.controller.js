@@ -184,6 +184,27 @@ class SessionController {
         req.session.user = req.user
         res.redirect('/products')
     }
+
+    toggleUserRole = async (req, res, next) => {
+        try {
+            const { uid } = req.params
+            console.log(uid)
+            const user = await this.userService.getUserBy(uid)
+            console.log('user: ', user)
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' })
+            }
+
+            // Toggle user role between "user" and "premium"
+            user.role = user.role === 'user' ? 'premium' : 'user'
+            await user.save()
+
+            res.status(200).json({ message: `User role updated to ${user.role}` })
+        } catch (error) {
+            next(error)
+        }
+    }
+
 }
 
 module.exports = SessionController

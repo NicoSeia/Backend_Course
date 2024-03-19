@@ -8,4 +8,5 @@ router.get('/mail', (req, res) => {
     res.send('mail sent')
 })
 
+
 module.exports = router

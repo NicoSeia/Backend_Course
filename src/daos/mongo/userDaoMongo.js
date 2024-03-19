@@ -30,9 +30,19 @@ class userDaoMongo {
         }
     }
 
+    async updatePassword(uid, newPassword) {
+        try {
+            return await this.userModel.findByIdAndUpdate(uid, { password: newPassword }, { new: true })
+        } catch (error) {
+            logger.error('Error updating user password:', error)
+        }
+    }
+
     async delete(uid) {
         return await this.userModel.findOneAndDelete({_id: uid})
     }
+
+
 }
 
 module.exports = userDaoMongo

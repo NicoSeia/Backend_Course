@@ -120,24 +120,27 @@ class ProdcutsController {
         }
     }
 
-    deleteProduct = async (req,res)=>{
-        try{
+    deleteProduct = async (req, res, next) => {
+        try {
             const pid = req.params.pid
-            const deletedProduct = await this.productService.deleteProduct(pid)
+            const userEmail = req.session.user.user
 
-            if (deletedProduct) {
-                return res.json({
-                    status: 'success',
-                    message: 'Product deleted successfully'
-                })
+            const product = await this.productService.getProductById(pid)
+            if (!product) {
+                return res.status(404).json({ status: 'error', message: 'Product not found' })
+            }
+
+            if (req.session.user.role === 'admin' || product.owner === userEmail) {
+                const deletedProduct = await this.productService.deleteProduct(pid)
+                if (deletedProduct) {
+                    return res.json({ status: 'success', message: 'Product deleted successfully' })
+                }
+                return res.status(404).json({ status: 'error', message: 'Product not found' })
             } else {
-                return res.status(404).json({
-                    status: 'error',
-                    message: 'Product not found'
-            })}
-        }catch(error){
-            logger.error(error)
-            res.status(500).send('server error')
+                return res.status(403).json({ status: 'error', message: 'Unauthorized to delete this product' })
+            }
+        } catch (error) {
+            next(error)
         }
     }
 

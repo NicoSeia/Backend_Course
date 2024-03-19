@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const ProdcutsController = require('../controllers/products.controller')
+const { isAdminOrPremium } = require('../middlewares/roleVerification')
 
 const router = Router()
 const {
@@ -15,7 +16,7 @@ router
     .get('/:pid', getProductById)
     .post('/', addProduct)
     .put('/:pid', updateProduct)
-    .delete('/:pid', deleteProduct)
+    .delete('/:pid', isAdminOrPremium, deleteProduct)
 
 
 module.exports = router
