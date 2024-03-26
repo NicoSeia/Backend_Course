@@ -1,0 +1,198 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Gets all carts
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: The carts were obtained correctly
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart'
+        '500':
+          description: Internal error server
+    post:
+      summary: Create a new cart
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: The carts were updated correctly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: Internal error server
+  /api/carts/{cid}:
+    put:
+      summary: Update cart
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: The cart was updated correctly
+
+        '500':
+          description: Internal error server
+    delete:
+      summary: Delete a cart
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: The cart was deleted correctly
+
+        '500':
+          description: Internal error server
+  /api/carts/{cid}/product/{pid}:
+    put:
+      summary: Update product quantity in cart
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: The ID of the cart
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: The ID of the product in the cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  description: The new quantity of the product in the cart
+      responses:
+        '200':
+          description: The product quantity was updated in the cart successfully
+        '404':
+          description: Cart or product not found
+        '500':
+          description: Internal error server
+
+    delete:
+      summary: Remove product from cart
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: The ID of the cart
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to remove from the cart
+      responses:
+        '200':
+          description: The product was removed from the cart successfully
+        '404':
+          description: Cart or product not found
+        '500':
+          description: Internal error server
+  /api/carts/{pid}:
+    post:
+      summary: Add a new product to the cart
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to add to the cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  description: The quantity of the product to add to the cart
+      responses:
+        '200':
+          description: The product was added to the cart successfully
+        '404':
+          description: Product not found
+        '500':
+          description: Internal error server
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Purchase cart
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: The ID of the cart to purchase
+      responses:
+        '200':
+          description: The cart was successfully purchased
+        '404':
+          description: Cart not found or empty cart
+        '500':
+          description: Internal error server
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: The ID of the product in the cart
+              quantity:
+                type: integer
+                description: The quantity of the product in the cart
+      required:
+        - products
+  requestBodies:
+    updateCart:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              products:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    product:
+                      type: string
+                      description: The ID of the product to update in the cart
+                    quantity:
+                      type: integer
+                      description: The new quantity of the product in the cart
+            required:
+              - products
+

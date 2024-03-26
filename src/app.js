@@ -10,6 +10,8 @@ const cookie = require('cookie-parser')
 const configureSocketIO = require('./helpers/socketIO.js')
 const handlebars = require('express-handlebars')
 const { logger, addLogger } = require('./utils/logger.js')
+const swaggerJsDoc = require('swagger-jsdoc')
+const swaggerUiExpress = require('swagger-ui-express')
 const handlebarsHelpers = require('handlebars-helpers')()
 const eq = handlebarsHelpers.eq
 
@@ -40,6 +42,21 @@ app.use(appRouter)
 /* app.use(session({
   secret: 'secret'
 })) */
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.1',
+    info: {
+      title: 'Ecommerce Documentation',
+      description: 'Api Doc for Ecommerce'
+    }
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`]
+}
+
+const specs = swaggerJsDoc(swaggerOptions)
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
+
 
 initializePassport()
 app.use(passport.initialize())
