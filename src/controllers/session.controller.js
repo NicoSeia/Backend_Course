@@ -87,7 +87,7 @@ class SessionController {
     
         try{
             const user = await this.userService.getUserBy({ email })
-            
+            console.log(user)
             if(user.email === 'adminCoder@coder.com' && password === user.password){
     
                 await this.userService.updateRole(user._id, 'admin')
@@ -188,19 +188,40 @@ class SessionController {
     toggleUserRole = async (req, res, next) => {
         try {
             const { uid } = req.params
-            console.log(uid)
-            const user = await this.userService.getUserBy(uid)
+            console.log("---------------------",uid)
+            const user = await this.userService.getUserBy({_id: uid})
             console.log('user: ', user)
             if (!user) {
                 return res.status(404).json({ message: 'User not found' })
             }
 
             // Toggle user role between "user" and "premium"
-            user.role = user.role === 'user' ? 'premium' : 'user'
+            let newRole;
+            if (user.role === 'user') {
+                newRole = 'premium';
+            } else if (user.role === 'premium') {
+                newRole = 'user';
+            } else {
+                return res.status(400).json({ message: 'Invalid user role' })
+            }
+
+            user.role = newRole
             await user.save()
 
             res.status(200).json({ message: `User role updated to ${user.role}` })
         } catch (error) {
+            next(error)
+        }
+    }
+
+    user = async (req, res, next) => {
+        try {
+            const uid = req.params.uid
+            console.log("=======", uid)
+            const user = await this.userService.getUserBy({_id: uid})
+            console.log(user)
+            res.json({payload: user})
+        } catch (error){
             next(error)
         }
     }

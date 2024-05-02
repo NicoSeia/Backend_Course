@@ -194,11 +194,16 @@ class CartController {
             }
 
             if (user.role === 'premium') {
-                // Obtener información sobre el producto
                 const productInfo = await this.productService.getProductById(pid)
+                
+                if (!productInfo) {
+                    return res.status(404).json({
+                        status: 'error',
+                        message: 'Product not found',
+                    })
+                }
     
-                // Verificar si el producto pertenece al usuario
-                if (productInfo.owner === user.email) {
+                if (productInfo.owner.toString() === user._id.toString()) {
                     return res.status(403).json({
                         status: 'error',
                         message: 'Unauthorized to add this product to your cart',

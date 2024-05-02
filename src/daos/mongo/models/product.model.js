@@ -43,8 +43,9 @@ const productsSchema = new Schema({
         default: true
     },
     owner: {
-        type: String,
-        default: 'admin',
+        type: Schema.Types.ObjectId,
+        ref: 'users',
+        default: null,
         required: true
     },
 })

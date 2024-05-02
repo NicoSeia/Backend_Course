@@ -5,7 +5,7 @@ class ProductRepository {
 
     getProducts = async() => await this.dao.get()
     getProductById = async(pid) => await this.dao.getById(pid)
-    addProduct = async(title, description, price, thumbnail, code, stock, status, category) => await this.dao.add(title, description, price, thumbnail, code, stock, status, category)
+    addProduct = async(title, description, price, thumbnail, code, stock, status, category, owner) => await this.dao.add(title, description, price, thumbnail, code, stock, status, category, owner)
     updateProduct = async(pid, title, description, price, thumbnail, code, stock, status, category) => await this.dao.update(pid, title, description, price, thumbnail, code, stock, status, category)
     deleteProduct = async(pid) => await this.dao.delete(pid)
 

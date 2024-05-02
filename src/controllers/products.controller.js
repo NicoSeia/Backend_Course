@@ -1,4 +1,4 @@
-const { productService } = require('../repositories/service')
+const { productService, userService } = require('../repositories/service')
 const customError = require('../services/errors/customError')
 const { EErrors } = require('../services/errors/enum')
 const { generateProductErrorInfo } = require('../services/errors/generateErrorInfo')
@@ -7,6 +7,7 @@ const { logger } = require('../utils/logger')
 class ProdcutsController {
     constructor(){
         this.productService = productService
+        this.userService = userService
     }
 
     getProducts = async (req,res)=>{
@@ -58,6 +59,12 @@ class ProdcutsController {
               category,
             } = req.body
             
+            const user = req.session.user
+
+            if (user.role !== 'premium') {
+                return res.status(403).json({ status: 'error', message: 'Only user premium can create product' })
+            }
+
             if(!title || !price || !code || !stock){
                 customError.createError({
                     name: 'Product creation error',
@@ -69,17 +76,30 @@ class ProdcutsController {
                         code,
                         stock,
                         status,
-                        category,
+                        category
                     }),
                     message: 'Error trying to add a product',
                     code: EErrors.DATABASE_ERROR
                 })
             }
 
-            await this.productService.addProduct(title, description, price, thumbnail, code, stock, status, category)
+            const owner = user._id
+
+            const newProduct = await this.productService.addProduct({
+                title,
+                description,
+                price,
+                thumbnail,
+                code,
+                stock,
+                status,
+                category,
+                owner, 
+            })
         
             res.json({
                 status: 'success',
+                payload: newProduct,
                 message: 'Product added successfully',
             })
             } catch (error) {
@@ -123,14 +143,14 @@ class ProdcutsController {
     deleteProduct = async (req, res, next) => {
         try {
             const pid = req.params.pid
-            const userEmail = req.session.user.user
+            const user = req.session.user
 
             const product = await this.productService.getProductById(pid)
             if (!product) {
                 return res.status(404).json({ status: 'error', message: 'Product not found' })
             }
 
-            if (req.session.user.role === 'admin' || product.owner === userEmail) {
+            if (user.role === 'admin' || product.owner.equals(user._id)) {
                 const deletedProduct = await this.productService.deleteProduct(pid)
                 if (deletedProduct) {
                     return res.json({ status: 'success', message: 'Product deleted successfully' })

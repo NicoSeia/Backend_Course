@@ -6,7 +6,7 @@ class productDaoMongo {
         this.model = productModel
     }
 
-    async add(title, description, price, thumbnail, code, stock, status, category){
+    async add(title, description, price, thumbnail, code, stock, status, category, owner){
         
         const existingProduct = await this.model.findOne({ code })
 
@@ -26,6 +26,7 @@ class productDaoMongo {
                     stock,
                     status,
                     category,
+                    owner
                 })
 
                 await newProduct.save()

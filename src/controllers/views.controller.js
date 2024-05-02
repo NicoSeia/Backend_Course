@@ -79,9 +79,9 @@ class ViewsController {
             const { limit, pageNumber, sort, query } = req.query
             const parsedLimit = limit ? parseInt(limit, 10) : 10
             const userId = req.session && req.session.user ? req.session.user.user : null
-            logger.info(userId)
+            //logger.info(userId)
             const user = await this.userViewService.getUserBy({ _id: userId })
-            console.log('User data:', user)
+            //console.log('User data:', user)
             const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await this.productViewService.getProducts({ limit: parsedLimit, pageNumber, sort, query })
             //console.log(docs)
             res.render('productsView', {

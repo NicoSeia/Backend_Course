@@ -14,7 +14,8 @@ const {
     current,
     github,
     githubCallback,
-    toggleUserRole
+    toggleUserRole,
+    user
 } = new SessionController()
 
 
@@ -34,6 +35,7 @@ router.get('/protected-route', isAuthenticated, (req, res) => {
     res.json({ message: 'Protected route' })
 })
 
-router.get('/premium/:uid', toggleUserRole)
+router.put('/premium/:uid', toggleUserRole)
 
+router.get('/user/:uid', user)
 module.exports = router
