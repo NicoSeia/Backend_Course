@@ -19,7 +19,7 @@ exports.sendPasswordResetEmail = async (userId, userEmail) => {
     const token = jwt.sign({ userId }, 'secreto', { expiresIn: '1h' })
 
     // Construir la URL de restablecimiento de contraseña con el token como parámetro de consulta
-    const resetUrl = `https://localhost:4000/api/reset-password?token=${token}`
+    const resetUrl = `https://localhost:4000/reset-password?token=${token}`
 
     // Crear y enviar el correo electrónico
     await transport.sendMail({

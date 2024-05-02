@@ -81,7 +81,7 @@ class ViewsController {
             const userId = req.session && req.session.user ? req.session.user.user : null
             logger.info(userId)
             const user = await this.userViewService.getUserBy({ _id: userId })
-            //console.log('User data:', user)
+            console.log('User data:', user)
             const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await this.productViewService.getProducts({ limit: parsedLimit, pageNumber, sort, query })
             //console.log(docs)
             res.render('productsView', {
@@ -174,50 +174,64 @@ class ViewsController {
     }
 
     sendResetEmail = async (req, res) => {
-        const { userId, userEmail } = req.body
-        console.log('userid: ', userId)
-        console.log('useremail: ', userEmail)
+        const userId = req.session && req.session.user ? req.session.user.user : null
+        const user = await this.userViewService.getUserBy({ _id: userId })
+        logger.info(user._id)
+        logger.info(user.email)
         try {
             // Enviar el correo electrónico de restablecimiento de contraseña
-            await sendPasswordResetEmail(userId, userEmail)
-            res.status(200).json({ message: 'Correo electrónico enviado exitosamente' })
+            await sendPasswordResetEmail(user._id, user.email)
+            res.status(200).json({ message: 'Email sent successfully' })
         } catch (error) {
-            console.error('Error al enviar el correo electrónico:', error)
-            res.status(500).json({ error: 'Error al enviar el correo electrónico' })
+            //console.error('Error sending email:', error)
+            res.status(500).json({ error: 'Error sending email' })
         }
     }
 
     resetPassword = async (req, res) => {
-        const { token, newPassword } = req.body
+        const { token } = req.query
+        const { newPassword, confirmPassword } = req.body
+        
+        if (!token) {
+            return res.status(400).json({ error: 'Token es requered' })
+        }
     
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ error: 'Passwords do not match' })
+        }
+
         try {
             const decodedToken = verifyResetToken(token)
             if (!decodedToken) {
-                return res.status(400).json({ error: 'Token inválido o expirado' })
+                return res.status(400).json({ error: 'Token is no valid or expired' })
             }
     
             const user = await this.userViewService.getUserBy(decodedToken.userId)
             if (!user) {
-                return res.status(400).json({ error: 'Usuario no encontrado' })
+                return res.status(400).json({ error: 'User not found' })
             }
     
             if (isValidPassword(newPassword, { password: user.password })) {
-                return res.status(400).json({ error: 'No puedes utilizar la misma contraseña anterior' })
+                return res.status(400).json({ error: 'You can not use the same password' })
             }
     
             await this.userViewService.updateUserPassword(decodedToken.userId, createHash(newPassword))
     
-            res.status(200).json({ message: 'Contraseña restablecida exitosamente' })
+            res.status(200).json({ message: 'Password updated successfully' })
         } catch (error) {
-            logger.error('Error al restablecer la contraseña:', error)
-            res.status(500).json({ error: 'Error al restablecer la contraseña' })
+            //logger.error('Error updating password:', error)
+            res.status(500).json({ error: 'Error updating password' })
         }
     }
 
-    resetPasswordView = async(req, res) => {
-        const { token } = req.params
+    resetPasswordViewToken = async(req, res) => {
+        const { token } = req.query
+
+        if (!token) {
+            return res.status(400).json({ error: 'Token is required' })
+        }
         
-        res.render('resetPassword', { token })
+        res.render('resetPasswordToken', { token })
     }
 
 }

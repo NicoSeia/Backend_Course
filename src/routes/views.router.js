@@ -17,7 +17,8 @@ const {
     shoppingCart,
     resetPasswordView,
     sendResetEmail,
-    resetPassword
+    resetPassword,
+    resetPasswordViewToken
 } = new ViewsController()
 
 router.get('/', home)
@@ -40,9 +41,9 @@ router.get('/reset-password', resetPasswordView)
 
 router.post('/reset-password', sendResetEmail)
 
-router.get('/reset-password:token', resetPasswordView)
+router.get('/reset-password', resetPasswordViewToken)
 
-router.post('/reset-password:token', resetPassword)
+router.post('/reset-password', resetPassword)
 
 /* router.get('/logout', async (req,res) =>{
     res.render('login')

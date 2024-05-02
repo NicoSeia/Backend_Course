@@ -12,3 +12,4 @@ error: undefined
 error: undefined
 error: undefined
 error: undefined
+error: Error during user registration: users validation failed: role: Path `role` is required. {"_message":"users validation failed","errors":{"role":{"kind":"required","message":"Path `role` is required.","name":"ValidatorError","path":"role","properties":{"message":"Path `role` is required.","path":"role","type":"required","value":""},"value":""}},"stack":"ValidationError: users validation failed: role: Path `role` is required.\n    at Document.invalidate (C:\\Users\\Usuario\\Desktop\\Entregas\\node_modules\\mongoose\\lib\\document.js:3187:32)\n    at C:\\Users\\Usuario\\Desktop\\Entregas\\node_modules\\mongoose\\lib\\document.js:2980:17\n    at C:\\Users\\Usuario\\Desktop\\Entregas\\node_modules\\mongoose\\lib\\schemaType.js:1368:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"}

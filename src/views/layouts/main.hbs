@@ -20,6 +20,7 @@
             </ul>
             {{#if user}}
                 <a href="/api/session/logout" class="btn btn-info">Log out</a>
+                <a href="/reset-password" class="btn btn-info">Reset Password</a>
                 {{#each user}}
                     {{#if this._id}}
                         <a href="/api/session/premium/{{this._id}}" class="btn btn-info">Change User Role</a>
