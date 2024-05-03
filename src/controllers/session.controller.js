@@ -2,6 +2,9 @@ const { createHash, isValidPassword } = require('../utils/hashPassword')
 const { generateToken } = require('../utils/createToken')
 const { cartService, userService } = require('../repositories/service')
 const { logger } = require('../utils/logger')
+const multer = require('multer')
+const { upload } = require('../utils/multer')
+
 
 
 class SessionController {
@@ -117,6 +120,9 @@ class SessionController {
                 if (!isValidPassword(password, { password: user.password })) {
                     return res.send('email or password not valid')
                 }
+
+                user.last_connection = new Date()
+                await user.save()
     
                 req.session.user = {
                     user: user._id,
@@ -150,6 +156,15 @@ class SessionController {
 
     logout = async (req,res) =>{
         try{
+            const user = req.session.user
+
+            if (user) {
+                const dbUser = await this.userService.getUserBy({ _id: user.user })
+                if (dbUser) {
+                    dbUser.last_connection = new Date()
+                    await dbUser.save()
+                }
+            }
             req.session.destroy((err) =>{
                 if(err){
                     logger.error('Error during session destruction:', err)
@@ -223,6 +238,36 @@ class SessionController {
             res.json({payload: user})
         } catch (error){
             next(error)
+        }
+    }
+
+    uploadsMulter = async (req, res) => {
+        try {
+            const uid = req.params.uid
+            const files = req.files
+    
+            if (!files || files.length === 0) {
+                return res.status(400).json({ message: 'No files uploaded' })
+            }
+
+            const user = await this.userService.getUserBy({ _id: uid })
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' })
+            }
+    
+            const documents = files.map(file => ({
+                name: file.originalname,
+                reference: file.path,
+            }))
+    
+            user.documents = user.documents.concat(documents)
+    
+            await user.save()
+    
+            res.status(200).json({ message: 'Documents uploaded successfully', documents })
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({ message: 'Internal server error' })
         }
     }
 

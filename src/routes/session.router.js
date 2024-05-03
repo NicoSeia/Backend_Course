@@ -15,7 +15,8 @@ const {
     github,
     githubCallback,
     toggleUserRole,
-    user
+    user,
+    uploadsMulter
 } = new SessionController()
 
 
@@ -36,6 +37,8 @@ router.get('/protected-route', isAuthenticated, (req, res) => {
 })
 
 router.put('/premium/:uid', toggleUserRole)
+
+router.post('/:uid/documents', upload.array('documents', 10), uploadsMulter)
 
 router.get('/user/:uid', user)
 module.exports = router

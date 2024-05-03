@@ -29,6 +29,15 @@ const userSchema = new Schema({
         type: String,
         enum: ['admin', 'user', 'premium'],
         required: true
+    },
+    documents: [
+        {
+            name: String,
+            reference: String,
+        },
+    ],
+    last_connection: {
+        type: Date
     }
 })
 
