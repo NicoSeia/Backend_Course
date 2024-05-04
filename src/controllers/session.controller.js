@@ -210,20 +210,26 @@ class SessionController {
                 return res.status(404).json({ message: 'User not found' })
             }
 
-            // Toggle user role between "user" and "premium"
-            let newRole;
-            if (user.role === 'user') {
-                newRole = 'premium';
-            } else if (user.role === 'premium') {
-                newRole = 'user';
+            if (user.role === 'premium') {
+                user.role = 'user'
+                await user.save()
+                return res.status(200).json({ message: 'User role updated to user' })
+            }
+    
+            const documentCount = user.documents.length
+            if (documentCount >= 3) {
+                if (user.role != 'premium') {
+                    user.role = 'premium'
+                    await user.save()
+    
+                    return res.status(200).json({ message: 'User role changed to premium' })
+                } else {
+                    return res.status(200).json({ message: 'User is already premium' })
+                }
             } else {
-                return res.status(400).json({ message: 'Invalid user role' })
+                return res.status(400).json({ message: 'User has not uploaded enough documents to change role to premium' })
             }
 
-            user.role = newRole
-            await user.save()
-
-            res.status(200).json({ message: `User role updated to ${user.role}` })
         } catch (error) {
             next(error)
         }
@@ -245,6 +251,7 @@ class SessionController {
         try {
             const uid = req.params.uid
             const files = req.files
+            console.log("Received files:", files)
     
             if (!files || files.length === 0) {
                 return res.status(400).json({ message: 'No files uploaded' })
@@ -255,18 +262,41 @@ class SessionController {
                 return res.status(404).json({ message: 'User not found' })
             }
     
-            const documents = files.map(file => ({
-                name: file.originalname,
-                reference: file.path,
-            }))
+            const documents = []
+
+            for (const [fieldName, fileArray] of Object.entries(files)) {
+                fileArray.forEach(file => {
+                    documents.push({
+                        name: file.originalname,
+                        reference: file.path,
+                    })
+                })
+            }
     
             user.documents = user.documents.concat(documents)
     
             await user.save()
     
-            res.status(200).json({ message: 'Documents uploaded successfully', documents })
+            res.status(200).json({
+                message: 'Documentos subidos con éxito',
+                documents: documents.map(doc => ({
+                    name: doc.name,
+                    reference: doc.reference,
+                })),
+            })
         } catch (error) {
             console.error(error)
+            res.status(500).json({ message: 'Internal server error' })
+        }
+    }
+
+    uploadsMulterView = async (req, res) => {
+        try {
+            const uid = req.params.uid
+    
+            res.render('uploadFiles', { uid })
+        } catch (error) {
+            console.error('Error to render upload files view:', error)
             res.status(500).json({ message: 'Internal server error' })
         }
     }

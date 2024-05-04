@@ -24,6 +24,7 @@
                 {{#each user}}
                     {{#if this._id}}
                     <button class="btn btn-info change-role-btn" data-user-id="{{this._id}}">Change User Role</button>
+                    <a href="/api/session/{{this._id}}/upload-files" class="btn btn-info">Upload Files</a>
                 {{/if}}
                 {{/each}}
             {{else}}
@@ -68,7 +69,7 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Successful change',
-                        text: `The user role has been changed to ${data.message}`,
+                        text: `${data.message}`,
                     })
                 })
                 .catch(error => {

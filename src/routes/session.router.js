@@ -4,6 +4,7 @@ const { passportCall } = require('../passport-jwt/passportCall.middleware')
 const { authorization } = require('../passport-jwt/authorization.middleware')
 const SessionController = require('../controllers/session.controller')
 const { isAuthenticated } = require('../middlewares/auth.middleware')
+const { upload, uploadFields } = require('../utils/multer')
 
 const router = Router()
 
@@ -16,7 +17,8 @@ const {
     githubCallback,
     toggleUserRole,
     user,
-    uploadsMulter
+    uploadsMulter,
+    uploadsMulterView
 } = new SessionController()
 
 
@@ -38,7 +40,9 @@ router.get('/protected-route', isAuthenticated, (req, res) => {
 
 router.put('/premium/:uid', toggleUserRole)
 
-router.post('/:uid/documents', upload.array('documents', 10), uploadsMulter)
+router.post('/:uid/documents', uploadFields, uploadsMulter)
+
+router.get('/:uid/upload-files', uploadsMulterView)
 
 router.get('/user/:uid', user)
 module.exports = router
