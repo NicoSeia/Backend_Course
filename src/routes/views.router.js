@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const ViewsController = require('../controllers/views.controller')
-const { isAdminOrPremium, isUser } = require('../middlewares/roleVerification')
+const { isAdminOrPremium, isUser, isAdmin } = require('../middlewares/roleVerification')
 const { isAuthenticated } = require('../middlewares/auth.middleware')
 
 
@@ -18,7 +18,8 @@ const {
     resetPasswordView,
     sendResetEmail,
     resetPassword,
-    resetPasswordViewToken
+    resetPasswordViewToken,
+    adminView
 } = new ViewsController()
 
 router.get('/', home)
@@ -44,6 +45,8 @@ router.post('/reset-password', sendResetEmail)
 router.get('/reset-password', resetPasswordViewToken)
 
 router.post('/reset-password', resetPassword)
+
+router.get('/admin', isAdmin, adminView)
 
 /* router.get('/logout', async (req,res) =>{
     res.render('login')

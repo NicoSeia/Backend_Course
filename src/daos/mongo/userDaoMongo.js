@@ -42,6 +42,20 @@ class userDaoMongo {
         return await this.userModel.findOneAndDelete({_id: uid})
     }
 
+    async findInactive(dateThreshold) {
+        try {
+            const inactiveUsers = await this.userModel.find({
+                last_connection: { $lt: dateThreshold }
+            })
+
+            return inactiveUsers
+        } catch (error) {
+            logger.error('Error finding inactive users:', error)
+            throw new Error('Error finding inactive users')
+        }
+    }
+
+
 
 }
 

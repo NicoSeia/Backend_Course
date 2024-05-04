@@ -3,6 +3,8 @@ const customError = require('../services/errors/customError')
 const { EErrors } = require('../services/errors/enum')
 const { generateProductErrorInfo } = require('../services/errors/generateErrorInfo')
 const { logger } = require('../utils/logger')
+const { sendEmail } = require('../utils/sendMail')
+
 
 class ProdcutsController {
     constructor(){
@@ -144,7 +146,7 @@ class ProdcutsController {
         try {
             const pid = req.params.pid
             const user = req.session.user
-
+    
             const product = await this.productService.getProductById(pid)
             if (!product) {
                 return res.status(404).json({ status: 'error', message: 'Product not found' })
@@ -153,6 +155,19 @@ class ProdcutsController {
             if (user.role === 'admin' || product.owner.equals(user._id)) {
                 const deletedProduct = await this.productService.deleteProduct(pid)
                 if (deletedProduct) {
+                    if (product.owner && user.role === 'premium') {
+                        const ownerEmail = product.owner.email
+                        const subject = 'Product Deleted'
+                        const html = `
+                            <p>Dear ${product.owner.first_name},</p>
+                            <p>We would like to inform you that your product "${deletedProduct.title}" has been deleted from our platform.</p>
+                            <p>If you have any questions, please do not hesitate to contact us.</p>
+                            <p>Thank you for using our platform.</p>
+                        `
+
+                        await sendEmail(ownerEmail, subject, html)
+                    }
+                    
                     return res.json({ status: 'success', message: 'Product deleted successfully' })
                 }
                 return res.status(404).json({ status: 'error', message: 'Product not found' })
@@ -162,7 +177,7 @@ class ProdcutsController {
         } catch (error) {
             next(error)
         }
-    }
+    };
 
 
 }

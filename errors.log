@@ -29,3 +29,6 @@ error: undefined {"code":"ENOENT","errno":-4058,"path":"C:\\Users\\Usuario\\Desk
 error: undefined {"code":"ENOENT","errno":-4058,"path":"C:\\Users\\Usuario\\Desktop\\Entregas\\src\\utils\\public\\uploads\\profiles\\6634150f5926347a207b732e-1714835119453-Adapunk.png","storageErrors":[],"syscall":"open"}
 error: undefined {"code":"ENOENT","errno":-4058,"path":"C:\\Users\\Usuario\\Desktop\\Entregas\\src\\utils\\public\\uploads\\profiles\\6634150f5926347a207b732e-1714835258819-Adapunk.png","storageErrors":[],"syscall":"open"}
 error: undefined {"code":"ENOENT","errno":-4058,"path":"C:\\Users\\Usuario\\Desktop\\Entregas\\public\\uploads\\profiles\\6634150f5926347a207b732e-1714835568848-Adapunk.png","storageErrors":[],"syscall":"open"}
+error: Missing helper: "ifCond" {"name":"Error"}
+error: Missing helper: "ifCond" {"name":"Error"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"styles.css\"","value":"styles.css","valueType":"string"}

@@ -4,6 +4,8 @@ const { cartService, userService } = require('../repositories/service')
 const { logger } = require('../utils/logger')
 const multer = require('multer')
 const { upload } = require('../utils/multer')
+const { sendEmail } = require('../utils/sendMail')
+
 
 
 
@@ -251,7 +253,7 @@ class SessionController {
         try {
             const uid = req.params.uid
             const files = req.files
-            console.log("Received files:", files)
+            //console.log("Received files:", files)
     
             if (!files || files.length === 0) {
                 return res.status(400).json({ message: 'No files uploaded' })
@@ -297,6 +299,54 @@ class SessionController {
             res.render('uploadFiles', { uid })
         } catch (error) {
             console.error('Error to render upload files view:', error)
+            res.status(500).json({ message: 'Internal server error' })
+        }
+    }
+
+    getAllUsers = async (req, res) => {
+        try {
+            const users = await this.userService.getUsers()
+
+            const userList = users.map(user => ({
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                role: user.role
+            }))
+
+            res.json({ status: 'success', payload: userList })
+        } catch (error) {
+            console.error('Error fetching users:', error)
+            res.status(500).json({ message: 'Internal server error' })
+        }
+    }
+
+    deleteInactiveUsers = async (req, res) => {
+        try {
+            const now = new Date()
+            const twoDaysAgo = new Date(now.getTime() - (2 * 24 * 60 * 60 * 1000))
+             
+            const inactiveUsers = await this.userService.findInactiveUsers(twoDaysAgo)
+            
+            if (inactiveUsers.length === 0) {
+                return res.status(200).json({ message: 'No inactive users found' })
+            }
+            
+            for (const user of inactiveUsers) {
+                await this.userService.deleteUser(user._id)
+                
+                const subject = 'Account deleted by inactivity'
+                const html = `
+                    <div>
+                        <h2>Hi ${user.first_name},</h2>
+                        <p>Your account has been deleted due to inactivity of two or more days. If you have any questions, please contact us!.</p>
+                    </div>`
+                await sendEmail(user.email, subject, html)
+            }
+            
+            res.status(200).json({ message: `Removed ${inactiveUsers.length} inactive users` })
+        } catch (error) {
+            console.error('Error deleting inactive users:', error)
             res.status(500).json({ message: 'Internal server error' })
         }
     }

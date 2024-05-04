@@ -9,6 +9,8 @@ class UserRepository {
     updateUser = async(uid, userUpdate) => await this.dao.update(uid, userUpdate)
     updateRole = async(uid, newRole) => await this.dao.updateRole(uid, newRole)
     updateUserPassword = async(uid, newPassword) => await this.dao.updatePassword(uid, newPassword)
+    deleteUser = async(uid) => await this.dao.delete(uid)
+    findInactiveUsers = async(dateThreshold) => await this.dao.findInactive(dateThreshold)
 
 }
 

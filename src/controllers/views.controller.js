@@ -106,6 +106,7 @@ class ViewsController {
             const pid = req.params.pid
             //console.log(pid)
             const filteredProduct = await this.productViewService.getProductById(pid)
+            //console.log(filteredProduct)
             if(filteredProduct){
                 res.render('details', {
                     title: 'Product Detail',
@@ -232,6 +233,20 @@ class ViewsController {
         }
         
         res.render('resetPasswordToken', { token })
+    }
+
+    adminView = async (req, res) => {
+        try {
+            const users = await this.userViewService.getUsers()
+            //console.log(users)
+            res.render('adminView', { 
+                title: 'Users',
+                users 
+            })
+        } catch (error) {
+            console.error('Error fetching users:', error)
+            res.status(500).json({ message: 'Internal server error' })
+        }
     }
 
 }

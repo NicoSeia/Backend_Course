@@ -5,6 +5,7 @@ const { authorization } = require('../passport-jwt/authorization.middleware')
 const SessionController = require('../controllers/session.controller')
 const { isAuthenticated } = require('../middlewares/auth.middleware')
 const { upload, uploadFields } = require('../utils/multer')
+const { isAdmin } = require('../middlewares/roleVerification')
 
 const router = Router()
 
@@ -18,7 +19,9 @@ const {
     toggleUserRole,
     user,
     uploadsMulter,
-    uploadsMulterView
+    uploadsMulterView,
+    getAllUsers,
+    deleteInactiveUsers
 } = new SessionController()
 
 
@@ -43,6 +46,10 @@ router.put('/premium/:uid', toggleUserRole)
 router.post('/:uid/documents', uploadFields, uploadsMulter)
 
 router.get('/:uid/upload-files', uploadsMulterView)
+
+router.get('/', isAdmin , getAllUsers)
+
+router.delete('/', isAdmin, deleteInactiveUsers)
 
 router.get('/user/:uid', user)
 module.exports = router
