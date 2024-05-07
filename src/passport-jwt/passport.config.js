@@ -2,6 +2,7 @@ const passport = require('passport')
 const passport_jwt = require('passport-jwt')
 const { logger } = require('../utils/logger')
 
+
 const JWTStrategy = passport_jwt.Strategy
 const extract_jwt = passport_jwt.ExtractJwt
 
@@ -31,5 +32,5 @@ const initializePassport = () => {
 }
 
 module.exports = {
-    initializePassport
+    initializePassport,
 }

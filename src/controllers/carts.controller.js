@@ -5,6 +5,8 @@ const customError = require('../services/errors/customError')
 const { generateCartErrorInfo, generateCartRemoveErrorInfo } = require('../services/errors/generateErrorInfo')
 const { EErrors } = require('../services/errors/enum')
 const { logger } = require('../utils/logger')
+const { sendEmail } = require('../utils/sendMail')
+
 
 class CartController {
     constructor(){
@@ -177,60 +179,54 @@ class CartController {
 
     addProductToCart2 = async (req, res,next) => {
         try {
-            const { pid } = req.params
-            const user = req.session.user
-            const cId = user.cart
-            if (!user || !user.cart) {
-                customError.createError({
-                    name: 'Add product to cart error',
-                    cause: generateCartErrorInfo(user, cId),
-                    message: 'Error trying add product to cart',
-                    code: EErrors.DATABASE_ERROR
-                })
-                /* return res.status(404).json({
-                    status: 'error',
-                    message: 'User not found or user does not have a cart',
-                }) */
-            }
-
+            console.log("Entre al add");
+            const { pid } = req.params;
+            console.log("PID:", pid);
+            const {user} = req.body
+            console.log("Soy el user:", user);
+            const cId = user.cart;
+            console.log("Carrito ID:", cId);
+            
             if (user.role === 'premium') {
-                const productInfo = await this.productService.getProductById(pid)
+                console.log("Soy premium");
+                const productInfo = await this.productService.getProductById(pid);
                 
                 if (!productInfo) {
                     return res.status(404).json({
                         status: 'error',
                         message: 'Product not found',
-                    })
+                    });
                 }
     
-                if (productInfo.owner.toString() === user._id.toString()) {
+                if (productInfo && productInfo.owner && productInfo.owner.toString() === user._id.toString()) {
                     return res.status(403).json({
                         status: 'error',
                         message: 'Unauthorized to add this product to your cart',
-                    })
+                    });
                 }
             }
             
-            logger.info(cId)
-            await this.cartService.addProductToCart(cId, pid)
-
+            await this.cartService.addProductToCart(cId, pid);
             res.json({
                 status: 'success',
                 message: 'Product added to cart successfully',
-            })
+            });
         } catch (error) {
-            next(error)
-            /* res.status(500).json({
+            // Asegúrate de que el error sea específico
+            console.error("Error en addProductToCart2:", error);
+            res.status(500).json({
                 status: 'error',
-                message: 'Server error',
-            }) */
+                message: 'Internal Server Error',
+            });
         }
     }
 
     purchaseCart = async (req, res) => {
         try {
             const { cid } = req.params
-            
+            const { user } = req.body
+            console.log("Entreee al purchase ", cid)
+            console.log("Purchase initiated by user:", user)
             const cart = await this.cartService.getCartById(cid)
             if (!cart) {
                 return res.status(404).json({ status: 'error', message: 'Cart not found' })
@@ -238,6 +234,7 @@ class CartController {
             const productUpdates = []
             const productsNotPurchased = []
             let totalAmount = 0
+            const purchasedProducts = []
             for (const item of cart) {
                 const productId = item.product.toString()
                 const productArray = await this.productService.getProductById(productId)
@@ -253,6 +250,7 @@ class CartController {
                 }
                 product.stock -= item.quantity
                 logger.info(product)
+                console.log(product)
                 productUpdates.push(this.productService.updateProduct(productId,
                     product.title, 
                     product.description, 
@@ -268,11 +266,17 @@ class CartController {
                 //console.log("Product Price:", productPrice)
                 //console.log("Quantity:", quantity)
                 totalAmount += (quantity * productPrice)
+
+                purchasedProducts.push({
+                    title: product.title,
+                    quantity,
+                    price: productPrice
+                })
             }
 
             logger.info(totalAmount)
-            const userEmail = req.session.user.email
-            //console.log(userEmail)
+            const userEmail = user.email
+            console.log(userEmail)
             const ticketData = {
                 code: 'TICKET-' + Date.now().toString(36).toUpperCase(),
                 purchase_datetime: new Date(),
@@ -290,6 +294,27 @@ class CartController {
                 await this.cartService.deleteAllProducts(cid)
                 logger.info('----------Cart empty----------')
             }
+
+            const emailSubject = `Purchase Details - Ticket ${ticketData.code}`;
+            const emailBody = `
+                <p>Thank you for your purchase, ${user.first_name} ${user.last_name}!</p>
+                <p>Details of your ticket:</p>
+                <ul>
+                    <li><strong>Ticket Code:</strong> ${ticketData.code}</li>
+                    <li><strong>Purchase Date:</strong> ${ticketData.purchase_datetime}</li>
+                    <li><strong>Total Amount:</strong> ${ticketData.amount.toFixed(2)}</li>
+                </ul>
+                <p>Purchased Products:</p>
+                <ul>
+                    ${purchasedProducts.map(product => `
+                        <li>
+                            <strong>${product.title}</strong> - Quantity: ${product.quantity}, Price: $${product.price.toFixed(2)}
+                        </li>
+                    `).join('')}
+                </ul>
+            `
+            await sendEmail(user.email, emailSubject, emailBody)
+
             try {
                 await Promise.all(productUpdates)
                 return res.status(200).json({ status: 'success', message: 'Stock updated successfully' })

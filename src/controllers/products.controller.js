@@ -14,11 +14,24 @@ class ProdcutsController {
 
     getProducts = async (req,res)=>{
         try{
-            const products = await this.productService.getProducts()
-            return res.json({
-                status: 'succes',
-                payload: products
+            const { limit, pageNumber, sort, query } = req.query
+        
+            const parsedLimit = parseInt(limit) || 10
+            const parsedPageNumber = parseInt(pageNumber) || 1
+            const sortOrder = sort === 'asc' ? 1 : -1
+
+            const productsData = await this.productService.getProducts({
+                limit: parsedLimit,
+                pageNumber: parsedPageNumber,
+                sort: sortOrder,
+                query: query || '',
             })
+            res.json({
+                status: 'success',
+                payload: productsData,
+            })
+
+
         }catch (error){
             console.error(error)
             res.status(500).send('Server error')
@@ -59,14 +72,14 @@ class ProdcutsController {
               stock,
               status,
               category,
+              
             } = req.body
-            
+
             const user = req.session.user
-
-            if (user.role !== 'premium') {
-                return res.status(403).json({ status: 'error', message: 'Only user premium can create product' })
+            if (user.role !== 'premium' && user.role !== 'admin') {
+                return res.status(403).json({ status: 'error', message: 'Only user premium or admin can create product' })
             }
-
+            console.log('pase el verificador, soy admin')
             if(!title || !price || !code || !stock){
                 customError.createError({
                     name: 'Product creation error',
@@ -85,8 +98,7 @@ class ProdcutsController {
                 })
             }
 
-            const owner = user._id
-
+            const owner = user.user
             const newProduct = await this.productService.addProduct({
                 title,
                 description,
@@ -98,15 +110,19 @@ class ProdcutsController {
                 category,
                 owner, 
             })
-        
             res.json({
                 status: 'success',
                 payload: newProduct,
                 message: 'Product added successfully',
             })
-            } catch (error) {
-              next(error)
-              //res.status(500).send('Server error')
+        } catch (error) {
+            if (error.code === 'PRODUCT_EXISTS') {
+                res.status(400).json({ status: 'error', message: 'Product already exists' })
+            } else if (error.code === 'INVALID_PRODUCT') {
+                res.status(400).json({ status: 'error', message: 'Invalid product data' })
+            } else {
+                res.status(500).json({ status: 'error', message: 'Server error' })
+            }
         }
     }
 

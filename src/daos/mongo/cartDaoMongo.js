@@ -22,8 +22,9 @@ class cartDaoMongo {
     }
 
     async getById(cid) {
+        console.log("cartid en el dao:", cid)
         const cart = await this.model.findOne({ _id: cid }).lean()
-
+        console.log("Carrito exitoso", cart)
         if (cart) {
             return cart.products
         } else {
@@ -32,8 +33,9 @@ class cartDaoMongo {
         }
     }
 
-    async add(cartId, productId) {
-        let cart = await this.model.findOne({ _id: cartId })
+    async add(cId, pid) {
+        console.log("datpssss", cId, pid)
+        let cart = await this.model.findOne({ _id: cId })
             
         if (!cart) {
             const newCart = await this.model.create({
@@ -42,13 +44,13 @@ class cartDaoMongo {
             cart = newCart
         }
 
-        const existingProductIndex = cart.products.findIndex((item) => item.product.equals(productId))
+        const existingProductIndex = cart.products.findIndex((item) => item.product.equals(pid))
 
         if (existingProductIndex !== -1) {
             cart.products[existingProductIndex].quantity += 1;
         } else {
             cart.products.push({
-            product: productId,
+            product: pid,
             quantity: 1,
             })
         }

@@ -5,6 +5,8 @@ const { logger } = require('../utils/logger')
 const multer = require('multer')
 const { upload } = require('../utils/multer')
 const { sendEmail } = require('../utils/sendMail')
+const jwt = require('jsonwebtoken')
+const { jwt_secret_key } = require('../config/config')
 
 
 
@@ -17,7 +19,7 @@ class SessionController {
 
     register = async (req,res) =>{
         const { first_name, last_name, date, email, password, role} = req.body
-        //console.log(first_name, last_name, date, email, password)
+        console.log(first_name, last_name, date, email, password)
     
         if(first_name === '' || last_name === '' || email === '' || password === '') {
             return res.send('All fields must be required')
@@ -32,13 +34,15 @@ class SessionController {
             }
     
             const cart = await this.cartService.createCart()
+
+            const hashedPassword = createHash(password)
     
             const newUser = {
                 first_name,
                 last_name,
                 date,
                 email,
-                password: createHash(password),
+                password: hashedPassword,
                 cart: cart._id,
                 role,
             }
@@ -63,10 +67,9 @@ class SessionController {
                 cart: result.cart,
                 role: result.role
             })
-    
             res.cookie('token', token, {
                 maxAge: 60*60*1000*24,
-                httpOnly: true,
+                httpOnly: false,
             }).send({
                 status: 'success',
                 payload: {
@@ -74,7 +77,9 @@ class SessionController {
                     first_name: result.first_name,
                     last_name: result.last_name,
                     email: result.email,
-                    role: result.role
+                    role: result.role,
+                    cart: result.cart,
+                    token: token
                 }
             })
         } catch (error) {
@@ -110,7 +115,7 @@ class SessionController {
     
                 res.cookie('token', token, {
                     maxAge: 60*60*1000*24,
-                    httpOnly: true,
+                    httpOnly: false,
                 }).redirect('/products')
             }
             else{
@@ -146,8 +151,19 @@ class SessionController {
     
                 res.cookie('token', token, {
                     maxAge: 60*60*1000*24,
-                    httpOnly: true,
-                }).redirect('/products')
+                    httpOnly: false,
+                }).send({
+                    status: 'success',
+                    payload: {
+                        id: user._id,
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                        email: user.email,
+                        cart: user.cart,
+                        role: user.role,
+                        token: token
+                    }
+                })//.redirect('/products')
             }
     
         } catch(error) {
@@ -172,7 +188,7 @@ class SessionController {
                     logger.error('Error during session destruction:', err)
                     return res.status(500).send({ status: 'error', error: 'Internal Server Error' })
                 }
-    
+                console.log("Logout successfully")
                 res.redirect('/login')
             })
         }catch(error) {
@@ -350,6 +366,36 @@ class SessionController {
             res.status(500).json({ message: 'Internal server error' })
         }
     }
+
+    verifyToken = async (req, res) => {
+        const { token } = req.cookies;
+        
+        if (!token) {
+            return res.status(401).json({ message: 'Unauthorized: No token found' });
+        }
+        
+        jwt.verify(token, jwt_secret_key, async (err, decodedUser) => {
+            if (err) {
+                return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+            }
+            
+            const userFound = await this.userService.getUserBy({ _id: decodedUser.id });
+            if (!userFound) {
+                return res.status(401).json({ message: 'Unauthorized: User not found' });
+            }
+            
+            res.json({
+                status: 'success',
+                payload: {
+                    id: userFound._id,
+                    first_name: userFound.first_name,
+                    last_name: userFound.last_name,
+                    email: userFound.email,
+                    role: userFound.role
+                }
+            });
+        });
+    };
 
 }
 

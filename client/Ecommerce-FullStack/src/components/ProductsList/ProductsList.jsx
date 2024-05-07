@@ -1,5 +1,7 @@
 import Card from 'react-bootstrap/Card'
 import ListGroup from 'react-bootstrap/ListGroup'
+import { Link } from 'react-router-dom'
+
 
 const ProductsList = ({product}) => {
   return (
@@ -16,7 +18,7 @@ const ProductsList = ({product}) => {
           <ListGroup.Item>Available: {product.stock}</ListGroup.Item>
         </ListGroup>
         <Card.Body>
-          <Card.Link href="#">Add To Cart</Card.Link>
+          <Link to={`/products/detail/${product._id}`} className="btn btn-outline-dark w-100">Details</Link>
         </Card.Body>
       </Card>
   )

@@ -83,7 +83,7 @@ class ViewsController {
             const user = await this.userViewService.getUserBy({ _id: userId })
             //console.log('User data:', user)
             const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, page } = await this.productViewService.getProducts({ limit: parsedLimit, pageNumber, sort, query })
-            //console.log(docs)
+            //console.log(docs, hasPrevPage, hasNextPage, prevPage, nextPage, page)
             res.render('productsView', {
                 title: 'Products View',
                 user,
@@ -139,13 +139,15 @@ class ViewsController {
             }
 
             const user = await this.userViewService.getUserBy({ _id: userId })
+            console.log("usuario en cart: ", user)
             const cartId = user.cart
+            console.log("carrtido del user: ", cartId)
             if (!cartId) {
                 return res.status(400).send('User does not have a cart')
             }
 
             const cart = await this.cartViewService.getCartById(cartId)
-            //console.log('Cart:', cart)
+            console.log('Cart:', cart)
 
             const productDetailsPromises = cart.map(async item => {
                 const productId = item.product.toString()
@@ -158,10 +160,15 @@ class ViewsController {
             const productsWithQuantities = await Promise.all(productDetailsPromises)
             
             //console.log('Products with quantities:', productsWithQuantities)
-            res.render('shoppingCart', { 
+            /* res.render('shoppingCart', { 
                 title: 'Shopping Cart',
                 cartId,
                 productsWithQuantities
+            }) */
+            res.json({
+                title: 'Shopping Cart',
+                cartId,
+                productsWithQuantities,
             })
         }
         catch(err){

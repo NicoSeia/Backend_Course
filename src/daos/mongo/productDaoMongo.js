@@ -6,17 +6,19 @@ class productDaoMongo {
         this.model = productModel
     }
 
-    async add(title, description, price, thumbnail, code, stock, status, category, owner){
+    async add({title, description, price, thumbnail, code, stock, status, category, owner}){
         
         const existingProduct = await this.model.findOne({ code })
-
         if (existingProduct) {
-            logger.info("This product has already been added")
+            const error = new Error("This product has already been added")
+            error.code = 'PRODUCT_EXISTS'
+            throw error
         } else {
             if (!title || !description || !price || !code || !stock) {
-              logger.error("Incorrect product: One of these properties is not valid")
-            }else{
-                const lastProduct = await this.model.findOne({}, {}, { sort: { 'id': -1 } })
+                const error = new Error("Incorrect product: One of these properties is not valid")
+                error.code = 'INVALID_PRODUCT'
+                throw error
+            }
                 const newProduct = new this.model({
                     title,
                     description,
@@ -30,11 +32,12 @@ class productDaoMongo {
                 })
 
                 await newProduct.save()
-            }
+
+                return newProduct
         }
     }
 
-    async get({ limit = 10, pageNumber = 1, sort, query } = {}){
+    async get({ limit = 10, pageNumber, sort, query } = {}){
         const filter = { isActive: true }
         if (query) {
             filter.$or = [
@@ -98,15 +101,20 @@ class productDaoMongo {
     }
 
     async delete(pid){
-        const product = await this.model.findOne({ _id: pid })
-        if (product) {
-            product.isActive = false
-
-            await product.save()
+        try {
+            const result = await this.model.deleteOne({ _id: pid })
     
-            logger.info("Product deactivated successfully")
-        } else {
-            logger.error("No such product exists")
+            if (result.deletedCount > 0) {
+                logger.info("Product deleted successfully")
+                return { success: true, message: "Product deleted successfully" }
+            } else {
+                const errorMessage = "No such product exists"
+                logger.error(errorMessage)
+                throw new Error(errorMessage)
+            }
+        } catch (error) {
+            logger.error("Error deleting product:", error)
+            throw error
         }
     }
 

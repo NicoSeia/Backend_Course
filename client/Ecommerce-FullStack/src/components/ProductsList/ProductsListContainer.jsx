@@ -1,9 +1,15 @@
 import ProductsList from "./ProductsList"
+import Home from '../Home'
 
 const ProductsListContainer = ({products}) => {
     return (
         <div style={{ margin: '0px', padding: '0px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', justifyItems: 'center', rowGap: '80px'}}>
-            {products.map(product => <ProductsList key={product._id} product={product} />)}
+            {products.map(product => (
+                <div key={product._id}>
+                    <ProductsList product={product} />
+                    {/* <Home product={product} /> */}
+                </div>
+            ))}
         </div>
     )
 }

@@ -1,11 +1,13 @@
-const { logger } = require("../../utils/logger");
+//const { logger } = require("../../utils/logger");
 
 //console.log("bienvenidos al script")
 const socket = io()
 
 socket.on('products', (data) => {
-  logger.info('Received products:', data);
+  //logger.info('Received products:', data);
+  console.log(data)
   const productsList = document.getElementById('products')
+  console.log(productsList)
   productsList.innerHTML = ""
 
   data.forEach((product) => {
@@ -26,8 +28,8 @@ const removeProduct = (id) => {
     method: 'DELETE'
   })
   .then(response => response.json())
-  .then(data => logger.info(data))
-  .catch(error => logger.error("Error:", error))
+  .then(data => console.log(data))
+  .catch(error => console.log(error))
 }
 
 const addProduct = () => {
@@ -59,13 +61,15 @@ const addProduct = () => {
     })
     .then((response) => response.json())
     .then((data) => {
-      logger.info("Success:", data);
+      //logger.info("Success:", data);
+      console.log("success: ", data)
       if (data.status === "error") {
         alert(data.message);
       }
     })
     .catch((error) => {
-      logger.error("Error:", error);
+      //logger.error("Error:", error);
+      console.log("error: ", error)
     });
 }   
 

@@ -32,3 +32,63 @@ error: undefined {"code":"ENOENT","errno":-4058,"path":"C:\\Users\\Usuario\\Desk
 error: Missing helper: "ifCond" {"name":"Error"}
 error: Missing helper: "ifCond" {"name":"Error"}
 error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"styles.css\"","value":"styles.css","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"styles.css\"","value":"styles.css","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"styles.css\"","value":"styles.css","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"styles.css\"","value":"styles.css","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"styles.css\"","value":"styles.css","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"styles.css\"","value":"styles.css","valueType":"string"}
+error: Error during user registration: data and salt arguments required {"stack":"Error: data and salt arguments required\n    at Object.hashSync (C:\\Users\\Usuario\\Desktop\\Entregas\\node_modules\\bcrypt\\bcrypt.js:91:15)\n    at exports.createHash (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\utils\\hashPassword.js:3:41)\n    at register (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\controllers\\session.controller.js:41:27)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error during user registration: data and salt arguments required {"stack":"Error: data and salt arguments required\n    at Object.hashSync (C:\\Users\\Usuario\\Desktop\\Entregas\\node_modules\\bcrypt\\bcrypt.js:91:15)\n    at exports.createHash (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\utils\\hashPassword.js:3:41)\n    at register (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\controllers\\session.controller.js:36:36)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error during user registration: data and salt arguments required {"stack":"Error: data and salt arguments required\n    at Object.hashSync (C:\\Users\\Usuario\\Desktop\\Entregas\\node_modules\\bcrypt\\bcrypt.js:91:15)\n    at exports.createHash (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\utils\\hashPassword.js:3:41)\n    at register (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\controllers\\session.controller.js:36:36)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error during user login: Cannot read properties of null (reading 'email') {"stack":"TypeError: Cannot read properties of null (reading 'email')\n    at login (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\controllers\\session.controller.js:98:21)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error during user login: result is not defined {"stack":"ReferenceError: result is not defined\n    at login (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\controllers\\session.controller.js:155:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: User nicolasjojo@gmail not found
+error: User nicolasjojo@gmail not found
+error: User nicolasjojo10@gmail.com not found
+error: User nicolasjojo10@gmail.com not found
+error: undefined
+error: undefined
+error: undefined {"_message":"products validation failed","errors":{"owner":{"kind":"required","message":"Path `owner` is required.","name":"ValidatorError","path":"owner","properties":{"message":"Path `owner` is required.","path":"owner","type":"required","value":null},"value":null}}}
+error: Incorrect product: One of these properties is not valid
+error: Incorrect product: One of these properties is not valid
+error: Incorrect product: One of these properties is not valid
+error: Incorrect product: One of these properties is not valid
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: Incorrect product: One of these properties is not valid
+error: Incorrect product: One of these properties is not valid
+error: Incorrect product: One of these properties is not valid
+error: Incorrect product: One of these properties is not valid
+error: Incorrect product: One of these properties is not valid
+error: Incorrect product: One of these properties is not valid
+error: Incorrect product: One of these properties is not valid
+error: Incorrect product: One of these properties is not valid
+error: Incorrect product: One of these properties is not valid
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"shoppingCart\"","value":"shoppingCart","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"shoppingCart\"","value":"shoppingCart","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"shoppingCart\"","value":"shoppingCart","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"shopping\"","value":"shopping","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"shopping\"","value":"shopping","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"shopping\"","value":"shopping","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"shopping\"","value":"shopping","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"shopping\"","value":"shopping","valueType":"string"}
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"styles.css\"","value":"styles.css","valueType":"string"}
+error: undefined
+error: undefined
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"styles.css\"","value":"styles.css","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"styles.css\"","value":"styles.css","valueType":"string"}
+error: undefined
+error: undefined
+error: undefined
+error: undefined
