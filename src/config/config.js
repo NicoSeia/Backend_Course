@@ -17,7 +17,8 @@ const configObject = {
     jwt_secret_key: process.env.JWT_SECRET_KEY,
     persistence: process.env.PERSISTENCE,
     gmail_user_app: process.env.GMAIL_USER_APP,
-    gmail_password_app: process.env.GMAIL_PASSWORD_APP
+    gmail_password_app: process.env.GMAIL_PASSWORD_APP,
+    stripe_secret_key: process.env.STRIPE_SECRET_KEY
 }
 
 const connectDb = async () => {

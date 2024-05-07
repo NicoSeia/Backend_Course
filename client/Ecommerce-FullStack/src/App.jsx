@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import UserProvider from './context/UserContext'
-import ProductProvider from './context/ProductContext'
 import CartProvider from './context/CartContext'
 
 
@@ -13,12 +12,11 @@ import ProductPages from './pages/ProductPages'
 import ProductDetailPages from './pages/ProductDetailPages'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
-import Home from './components/Home'
-import ProductsListContainer from './components/ProductsList/ProductsListContainer'
 import ChatPage from './pages/ChatPage'
 import RealTimeProducts from './pages/RealTimeProductsPage'
 import CartPage from './pages/CartPage'
 import ProtectedRoute from './ProtectedRoute'
+import SuccessPage from './pages/SuccessPage'
 
 
 function App() {
@@ -40,6 +38,7 @@ function App() {
                 <Route path='/realtimeproducts' element={<RealTimeProducts />} />
                 <Route path='/chat' element={<ChatPage />} />
                 <Route path='/cart' element={<CartPage />} />
+                <Route path='/success' element={<SuccessPage />}/>
               </Route>
             </Routes>
           </BrowserRouter>
