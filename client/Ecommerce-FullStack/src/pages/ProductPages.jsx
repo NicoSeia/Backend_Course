@@ -10,7 +10,7 @@ const ProductPages = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/products?pageNumber=${currentPage}`)
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/products?pageNumber=${currentPage}`)
             const data = await response.json()
 
             setProducts(data.payload.docs)

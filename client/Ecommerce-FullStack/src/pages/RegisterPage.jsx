@@ -19,7 +19,7 @@ const RegisterPage = () => {
                 body: JSON.stringify(data),
             };
     
-            const res = await fetch('http://localhost:8080/api/session/register', requestOptions);
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/session/register`, requestOptions);
             const resp = await res.json();
     
             console.log(resp);
