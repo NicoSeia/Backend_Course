@@ -1,6 +1,7 @@
 const express = require('express')
 const session = require('express-session')
 const mongoStore = require('connect-mongo')
+const path = require('path')
 const cors = require('cors')
 const { connectDb } = require('./config/config.js')
 const passport = require('passport')
