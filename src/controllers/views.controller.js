@@ -159,7 +159,6 @@ class ViewsController {
             // Esperar a que todas las promesas se resuelvan
             const productsWithQuantities = await Promise.all(productDetailsPromises)
             
-            //console.log('Products with quantities:', productsWithQuantities)
             /* res.render('shoppingCart', { 
                 title: 'Shopping Cart',
                 cartId,
