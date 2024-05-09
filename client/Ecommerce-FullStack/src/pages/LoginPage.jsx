@@ -19,7 +19,7 @@ const LoginPage = () => {
                 body: JSON.stringify(data),
             };
     
-            const res = await fetch('http://localhost:4000/api/session/login', requestOptions);
+            const res = await fetch('http://localhost:8080/api/session/login', requestOptions);
             const resp = await res.json();
     
             console.log(resp);

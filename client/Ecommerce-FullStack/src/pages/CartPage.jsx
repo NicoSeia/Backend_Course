@@ -24,7 +24,7 @@ const CartPage = () => {
 
             const fetchProductDetails = async () => {
                 const productPromises = cart.map(async (item) => {
-                    const response = await fetch(`http://localhost:4000/api/products/${item.product}`, {
+                    const response = await fetch(`http://localhost:8080/api/products/${item.product}`, {
                         headers: {
                             'Content-Type': 'application/json',
                             Authorization: `Bearer ${token}`,
@@ -106,7 +106,7 @@ const CartPage = () => {
                 products: productOfCart,
             };
     
-            const response = await fetch(`http://localhost:4000/api/payments/create-checkout-session`, {
+            const response = await fetch(`http://localhost:8080/api/payments/create-checkout-session`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -141,7 +141,7 @@ const CartPage = () => {
 
     const handleRemoveProduct = async (productId) => {
         try {
-            const response = await fetch(`http://localhost:4000/api/carts/${user.cart}/product/${productId}`, {
+            const response = await fetch(`http://localhost:8080/api/carts/${user.cart}/product/${productId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

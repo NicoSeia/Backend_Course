@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import io from 'socket.io-client'
 import Swal from 'sweetalert2'
 
-const socket = io('http://localhost:4000', {
+const socket = io('http://localhost:8080', {
     transports: ['websocket']
 })
 

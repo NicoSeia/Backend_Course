@@ -18,7 +18,7 @@ const SuccessPage = () => {
                 user: user,
             };
 
-            const responsePurchase = await fetch(`http://localhost:4000/api/carts/${user.cart}/purchase`, {
+            const responsePurchase = await fetch(`http://localhost:8080/api/carts/${user.cart}/purchase`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

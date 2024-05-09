@@ -7,7 +7,7 @@ const TopNavbar = () => {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('http://localhost:4000/api/session/logout', {
+            const response = await fetch('http://localhost:8080/api/session/logout', {
                 method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
@@ -45,7 +45,7 @@ const TopNavbar = () => {
 
                 <div className="flex items-center space-x-4">
                     <Link to="/cart" className="relative flex items-center space-x-2">
-                        <span>Cart</span>
+                        <span>Carrito</span>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-6 text-black hover:text-gray-600"

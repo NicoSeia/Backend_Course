@@ -12,7 +12,7 @@ const ProductDetail = ({product}) => {
           user: user
         }
 
-        const response = await fetch(`http://localhost:4000/api/carts/${product._id}`, {
+        const response = await fetch(`http://localhost:8080/api/carts/${product._id}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

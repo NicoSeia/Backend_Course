@@ -11,7 +11,7 @@ const ProductDetailPages = () => {
 
     useEffect(() =>{
         const getProduct = async () => {
-            const dataJson = await fetch(`http://localhost:4000/api/products/${pid}`)
+            const dataJson = await fetch(`http://localhost:8080/api/products/${pid}`)
             const data = await dataJson.json()
             console.log(data)
             setProduct(data.payload[0])
