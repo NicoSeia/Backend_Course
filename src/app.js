@@ -21,13 +21,8 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-//app.use(express.static(__dirname+'/public'))
-app.use(express.static(path.join(__dirname, 'client/Ecommerce-FullStack/dist')))
+app.use(express.static(__dirname+'/public'))
 
-// Ruta comodín para todas las demás solicitudes que no coincidan con ninguna ruta definida
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/Ecommerce-FullStack/dist', 'index.html'))
-})
 app.use(cookie())
 app.use(cors({
   origin: 'https://frontendelclubdeljuego.onrender.com',
