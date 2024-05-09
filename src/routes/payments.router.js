@@ -34,8 +34,8 @@ router.post('/create-checkout-session', async (req, res) =>{
             payment_method_types: ['card'],
             line_items: lineItems,
             mode: 'payment',
-            success_url: `http://localhost:5173/success`,
-            cancel_url: 'http://localhost:5173/cart',
+            success_url: `https://frontendelclubdeljuego.onrender.com/success`,
+            cancel_url: 'https://frontendelclubdeljuego.onrender.com/cart',
             customer_email: user.email,
         });
 
