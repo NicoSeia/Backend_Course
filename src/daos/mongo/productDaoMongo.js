@@ -7,8 +7,9 @@ class productDaoMongo {
     }
 
     async add({title, description, price, thumbnail, code, stock, status, category, owner}){
-        
+        console.log("Dao :", title, description, price, thumbnail, code, stock, status, category, owner)
         const existingProduct = await this.model.findOne({ code })
+        console.log(existingProduct)
         if (existingProduct) {
             const error = new Error("This product has already been added")
             error.code = 'PRODUCT_EXISTS'
@@ -19,21 +20,29 @@ class productDaoMongo {
                 error.code = 'INVALID_PRODUCT'
                 throw error
             }
-                const newProduct = new this.model({
-                    title,
-                    description,
-                    price,
-                    thumbnail,
-                    code,
-                    stock,
-                    status,
-                    category,
-                    owner
-                })
-
-                await newProduct.save()
-
-                return newProduct
+            const newProduct = new this.model({
+                title,
+                description,
+                price,
+                thumbnail,
+                code,
+                stock,
+                status,
+                category,
+                owner,
+            });
+        
+            console.log("New product object:", newProduct);
+        
+            try {
+                await newProduct.save();
+                console.log("Product saved successfully");
+                return newProduct;
+            } catch (error) {
+                console.error("Error saving product:", error);
+                throw error;
+            }
+        
         }
     }
 

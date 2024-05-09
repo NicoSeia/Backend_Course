@@ -45,7 +45,7 @@ const ProductDetail = ({product}) => {
     <div className="p-6 bg-white rounded-lg shadow-md">
       <div className="mb-4">
         <h1 className="text-2xl font-bold text-gray-800">{product.title}</h1>
-        <img src={product.thumbnail} alt={product.title} className="w-full h-64 object-cover rounded-md mt-2" />
+        <img src={product.thumbnail} alt={product.title} className="object-contain rounded-md mt-2 w-full h-auto max-w-md mx-auto" />
       </div>
       <h2 className="text-lg text-gray-700 mb-2">{product.description}</h2>
       <div className="mb-4">

@@ -34,17 +34,18 @@ const TopNavbar = () => {
         <nav className="bg-white shadow-md">
             <div className="container mx-auto px-4 py-4 flex justify-between items-center">
                 <div className="flex items-center">
-                    <Link to="/" className="text-2xl font-semibold text-black">Ecommerce</Link>
+                    <Link to="/" className="text-2xl font-semibold text-[#8ed37f] hover:bg-[#8ed37f] hover:text-white px-2 py-1 rounded-md">El Club del Juego</Link>
                     <div className="ml-6 space-x-4">
-                        <Link to="/" className="text-black hover:text-gray-600">Home</Link>
+                        <Link to="/" className="text-black hover:text-gray-600">Inicio</Link>
                         <Link to="/chat" className="text-black hover:text-gray-600">Chat</Link>
-                        <Link to="/products" className="text-black hover:text-gray-600">Product View</Link>
-                        <Link to="/realtimeproducts" className="text-black hover:text-gray-600">Real Time Products</Link>
+                        <Link to="/products" className="text-black hover:text-gray-600">Vista de Productos</Link>
+                        <Link to="/realtimeproducts" className="text-black hover:text-gray-600">Manejo de Productos</Link>
                     </div>
                 </div>
 
                 <div className="flex items-center space-x-4">
-                    <Link to="/cart" className="relative">
+                    <Link to="/cart" className="relative flex items-center space-x-2">
+                        <span>Cart</span>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-6 text-black hover:text-gray-600"
@@ -64,14 +65,14 @@ const TopNavbar = () => {
                     {isAuthenticated ? (
                         <button
                             onClick={handleLogout}
-                            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                            className="bg-red-100 text-black px-4 py-2 rounded-md hover:bg-red-600"
                         >
-                            Logout
+                            Cerrar Sesión
                         </button>
                     ) : (
                         <Link to="/login">
                             <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
-                                Login
+                                Iniciar Sesión
                             </button>
                         </Link>
                     )}

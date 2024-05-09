@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useUserContext } from '../context/UserContext'
 
 
 const RealTimeProducts = () => {
 
     const { register, handleSubmit } = useForm()
+    const { user } = useUserContext()
     const [products, setProducts] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [hasNextPage, setHasNextPage] = useState(false)
@@ -41,20 +43,26 @@ const RealTimeProducts = () => {
         }
     }
     
-    console.log(products)
+    //console.log(products)
     const onSubmit = handleSubmit(async (product) => {
+
+        console.log("producto dentro de la funcion", product)
+        const requestBody = {
+            product: product,
+            user: user
+        }
 
         const requestOptions = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', 
             },
-            body: JSON.stringify(product),
+            body: JSON.stringify(requestBody),
             credentials: 'include'  
         }
-        console.log(product)
         try{
             const response = await fetch('http://localhost:4000/api/products', requestOptions)
+            console.log(response)
             if (!response.ok) {
                 const data = await response.json()
                 alert(`Error to adding product: ${data.message}`)
@@ -73,13 +81,19 @@ const RealTimeProducts = () => {
 
     const removeProduct = (async (pid) => {
 
+        const requestBody = {
+            user: user
+        }
+
         const requestOptions = {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json', 
             },
+            body: JSON.stringify(requestBody),
             credentials: 'include'  
         }
+        console.log("PID: ", pid)
         try{
             const response = await fetch(`http://localhost:4000/api/products/${pid}`, requestOptions)
             if (!response.ok) {
@@ -94,7 +108,7 @@ const RealTimeProducts = () => {
             
             fetchProducts()
         }catch(error) {
-            console('Error deleting product:', error)
+            console.log('Error deleting product:', error)
             alert(`Error deleting product: ${error.message}`)
         }
 
@@ -102,14 +116,14 @@ const RealTimeProducts = () => {
 
     return (
         <div className="container mx-auto p-4">
-            <h2 className="text-2xl font-bold mb-4">Here, you can add or remove products</h2>
-            <h3 className="text-xl mb-4">List of Products</h3>
+            <h2 className="text-2xl font-bold mb-4">Puedes crear como borrar productos</h2>
+            <h3 className="text-xl mb-4">Lista de los Productos</h3>
 
             {/* Form to add a product */}
             <form onSubmit={onSubmit} className="mb-6 space-y-4">
                 {/* Input for title */}
                 <div className="flex flex-col">
-                    <label htmlFor="title" className="font-semibold">Title</label>
+                    <label htmlFor="title" className="font-semibold">Título</label>
                     <input
                         type="text"
                         {...register("title", {required: true})}
@@ -120,7 +134,7 @@ const RealTimeProducts = () => {
 
                 {/* Input for description */}
                 <div className="flex flex-col">
-                    <label htmlFor="description" className="font-semibold">Description</label>
+                    <label htmlFor="description" className="font-semibold">Descripción</label>
                     <input
                         type="text"
                         {...register("description", {required: true})}
@@ -131,7 +145,7 @@ const RealTimeProducts = () => {
 
                 {/* Input for price */}
                 <div className="flex flex-col">
-                    <label htmlFor="price" className="font-semibold">Price</label>
+                    <label htmlFor="price" className="font-semibold">Precio</label>
                     <input
                         type="number"
                         {...register("price", {required: true})}
@@ -142,7 +156,7 @@ const RealTimeProducts = () => {
 
                 {/* Input for thumbnail */}
                 <div className="flex flex-col">
-                    <label htmlFor="thumbnail" className="font-semibold">Thumbnail</label>
+                    <label htmlFor="thumbnail" className="font-semibold">Imagen</label>
                     <input
                         type="text"
                         {...register("thumbnail", {required: true})}
@@ -153,7 +167,7 @@ const RealTimeProducts = () => {
 
                 {/* Input for code */}
                 <div className="flex flex-col">
-                    <label htmlFor="code" className="font-semibold">Code</label>
+                    <label htmlFor="code" className="font-semibold">Código</label>
                     <input
                         type="text"
                         {...register("code", {required: true})}
@@ -185,7 +199,7 @@ const RealTimeProducts = () => {
 
                 {/* Input for category */}
                 <div className="flex flex-col">
-                    <label htmlFor="category" className="font-semibold">Category</label>
+                    <label htmlFor="category" className="font-semibold">Categoría</label>
                     <input
                         type="text"
                         {...register("category", {required: true})}
@@ -196,7 +210,7 @@ const RealTimeProducts = () => {
 
                 {/* Submit button */}
                 <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
-                    Add Product
+                    Agregar Producto
                 </button>
             </form>
 
@@ -212,7 +226,7 @@ const RealTimeProducts = () => {
                                 onClick={() => removeProduct(product._id)}
                                 className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition mt-2"
                             >
-                                Remove
+                                Eliminar
                             </button>
                         </li>
                     ))}
@@ -227,7 +241,7 @@ const RealTimeProducts = () => {
                 <span className="page-number" style={{ marginRight: '10px' }}>{currentPage}</span>
                 {hasNextPage && (
                     <button onClick={nextPage} className="btn btn-dark">
-                        Next
+                        Sig
                     </button>
                 )}
             </div>

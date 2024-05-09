@@ -186,7 +186,7 @@ const CartPage = () => {
   return (
         <div className="container mx-auto p-4">
             <header className="mb-6">
-                <h3 className="text-center text-2xl font-bold">Shopping Cart</h3>
+                <h3 className="text-center text-2xl font-bold">Carro de Compras</h3>
             </header>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -199,7 +199,7 @@ const CartPage = () => {
                             <img
                                 src={product.thumbnail}
                                 alt={product.title}
-                                className="w-full h-40 object-cover rounded-md mb-2"
+                                className="w-full h-50 object-cover rounded-md mb-2"
                             />
                             <p className="text-lg font-semibold">{product.title}</p>
                             <p>Cantidad: {quantity}</p>
@@ -208,7 +208,7 @@ const CartPage = () => {
                                 onClick={() => handleRemoveProduct(product._id)}
                                 className="bg-red-500 text-white px-4 py-2 rounded-md mt-2"
                             >
-                                Remove from Cart
+                                Eliminar del Carro
                             </button>
                         </div>
                     );
@@ -218,12 +218,14 @@ const CartPage = () => {
             <div className="mt-4">
                 <p className="text-lg font-semibold">Total del carrito: ${cartTotalPrice}</p>
                 <button onClick={handlePurchase} className="btn btn-secondary">
-                    BUY
+                    COMPRAR
                 </button>
             </div>
         </div>
 
   )
 }
+
+
 
 export default CartPage

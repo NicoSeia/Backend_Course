@@ -93,3 +93,27 @@ error: undefined
 error: undefined
 error: undefined
 error: undefined {"modifiedPaths":["products"],"version":31}
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: This product does not exist
+error: No such product exists
+error: Error deleting product: No such product exists {"stack":"Error: No such product exists\n    at productDaoMongo.delete (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\daos\\mongo\\productDaoMongo.js:122:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ProductRepository.deleteProduct (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\repositories\\product.repository.js:10:35)\n    at async deleteProduct (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\controllers\\products.controller.js:173:40)"}
+error: undefined
+error: This product does not exist
+error: No such product exists
+error: Error deleting product: No such product exists {"stack":"Error: No such product exists\n    at productDaoMongo.delete (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\daos\\mongo\\productDaoMongo.js:122:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ProductRepository.deleteProduct (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\repositories\\product.repository.js:10:35)\n    at async deleteProduct (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\controllers\\products.controller.js:173:40)"}
+error: undefined
+error: This product does not exist
+error: No such product exists
+error: Error deleting product: No such product exists {"stack":"Error: No such product exists\n    at productDaoMongo.delete (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\daos\\mongo\\productDaoMongo.js:122:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ProductRepository.deleteProduct (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\repositories\\product.repository.js:10:35)\n    at async deleteProduct (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\controllers\\products.controller.js:173:40)"}
+error: undefined
+error: No such product exists
+error: Error deleting product: No such product exists {"stack":"Error: No such product exists\n    at productDaoMongo.delete (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\daos\\mongo\\productDaoMongo.js:122:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ProductRepository.deleteProduct (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\repositories\\product.repository.js:10:35)\n    at async deleteProduct (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\controllers\\products.controller.js:173:40)"}
+error: undefined
+error: This product does not exist
+error: No such product exists
+error: Error deleting product: No such product exists {"stack":"Error: No such product exists\n    at productDaoMongo.delete (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\daos\\mongo\\productDaoMongo.js:122:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ProductRepository.deleteProduct (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\repositories\\product.repository.js:10:35)\n    at async deleteProduct (C:\\Users\\Usuario\\Desktop\\Entregas\\src\\controllers\\products.controller.js:173:40)"}
+error: undefined

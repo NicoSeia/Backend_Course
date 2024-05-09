@@ -16,7 +16,7 @@ router
     .get('/:pid', getProductById)
     .post('/', addProduct)
     .put('/:pid', updateProduct)
-    .delete('/:pid', isAdminOrPremium, deleteProduct)
+    .delete('/:pid', deleteProduct)
 
 
 module.exports = router
